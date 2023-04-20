@@ -78,6 +78,7 @@ service.interceptors.response.use(
 
         // if the custom code is not 20000, it is judged as an error.
         if (res.status !== 1) {
+            // this.$message.error(res.msg || 'Error');
             Message({
                 message: res.msg || 'Error',
                 type: 'error',
