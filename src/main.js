@@ -15,6 +15,9 @@ import "mavon-editor/dist/css/index.css";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 
+// 定义Http请求状态
+Vue.prototype.HTTP_SUCCESS = 200;
+
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios)

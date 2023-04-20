@@ -76,7 +76,6 @@
 
 <script>
 import controlShow from "../../mixins/controlShow";
-const CODE_OK = 200;
 
 export default {
   name: "projectList",
@@ -107,7 +106,7 @@ export default {
         .then(
           (response) => {
             response = response.data;
-            if (response.code === CODE_OK) {
+            if (response.code === this.HTTP_SUCCESS) {
               this.projectList = response.data.items;
               this.itemCount = Number(response.data.count);
             }

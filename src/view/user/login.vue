@@ -1,4 +1,3 @@
-
 <template>
   <div class="login-page">
     <div class="login-page-content">
@@ -34,7 +33,6 @@
 
 <script>
 const CODE_OK = 200;
-// const NO_ACTIVATE = 3;
 
 export default {
   name: "loginPage",
@@ -67,7 +65,7 @@ export default {
             .then(
               (response) => {
                 response = response.data;
-                if (response.http_status === CODE_OK) {
+                if (response.http_status === this.HTTP_SUCCESS) {
                   let userInfo = response.data;
                   this.$store.commit("saveUserInfo", userInfo);
                   localStorage.setItem("userInfo", JSON.stringify(userInfo));
