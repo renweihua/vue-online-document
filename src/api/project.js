@@ -7,3 +7,13 @@ export function getProjects(data) {
         data
     })
 }
+
+export function getProjectDetail(project_id) {
+    return request({
+        url: `/project-detail`,
+        method: 'get',
+        params: {
+            project_id
+        }
+    })
+}
