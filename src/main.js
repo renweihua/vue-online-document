@@ -5,9 +5,7 @@ import App from "./App.vue";
 import router from "./router";
 //复制到剪贴板
 import VueClipboard from "vue2-clipboard";
-//axios
-import VueAxios from 'vue-axios'
-import axios from './axios'
+
 //markdown组件
 import mavonEditor from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
@@ -20,7 +18,6 @@ Vue.prototype.HTTP_SUCCESS = 200;
 
 
 Vue.config.productionTip = false;
-Vue.use(VueAxios, axios)
 Vue.use(mavonEditor);
 //medium / small / mini
 Vue.use(ElementUI,{ size: 'medium', zIndex: 3000 });
