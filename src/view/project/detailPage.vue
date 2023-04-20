@@ -3,23 +3,23 @@
     <div class="right-l">
       <div class="info-box">
         <div class="title">
-          <span>{{projectData.title}}</span>
+          <span>{{projectData.project_name}}</span>
         </div>
         <div class="desc">
-          <span>{{projectData.description}}</span>
+          <span>{{projectData.project_description}}</span>
         </div>
         <ul>
           <li>
             <p>项目类型</p>
-            <p>{{projectData.type}}</p>
+            <p>{{projectData.project_type_text}}</p>
           </li>
           <li>
             <p>项目版本</p>
-            <p>{{projectData.version}}</p>
+            <p>{{projectData.project_version}}</p>
           </li>
           <li>
             <p>创建时间</p>
-            <p>{{projectData.create_time}}</p>
+            <p>{{projectData.time_formatting}}</p>
           </li>
           <li @click="jump()" class="api-detail">
             <p>api接口</p>
@@ -86,15 +86,15 @@ export default {
     //获取项目详情
     getDetail() {
       this.$http
-        .get("/project/detail", {
+        .get("/project-detail", {
           params: {
-            id: this.$route.params.projectId,
+            project_id: this.$route.params.projectId,
           },
         })
         .then(
           (response) => {
             response = response.data;
-            if (response.code === CODE_OK) {
+            if (response.http_status === CODE_OK) {
               this.projectData = response.data;
               this.$store.commit("saveProject", response.data);
             } else {
