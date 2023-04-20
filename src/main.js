@@ -27,16 +27,11 @@ Vue.use(ElementUI,{ size: 'medium', zIndex: 3000 });
 Vue.use(VueClipboard);
 
 
-(function () {
-  axios.get('/config.json').then((res) => {
-    Vue.prototype.BASE_URL = res.data.BASE_URL;
+Vue.prototype.BASE_URL = 'http://laravel-online-document.local.com:8090/api';
 
-    //实例化Vue
-    new Vue({
-      router,
-      store,
-      render: (h) => h(App),
-    }).$mount("#app");
-
-  });
-})();
+//实例化Vue
+new Vue({
+  router,
+  store,
+  render: (h) => h(App),
+}).$mount("#app");

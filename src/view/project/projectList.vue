@@ -11,16 +11,16 @@
         @cell-click="detail"
         size="medium"
       >
-        <el-table-column prop="title" label="项目名称"></el-table-column>
-        <el-table-column prop="version" label="版本号" width="180"></el-table-column>
-        <el-table-column prop="type" label="类型" width="180"></el-table-column>
-        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+        <el-table-column prop="project_name" label="项目名称"></el-table-column>
+        <el-table-column prop="project_version" label="版本号" width="180"></el-table-column>
+        <el-table-column prop="project_type_text" label="类型" width="180"></el-table-column>
+        <el-table-column prop="time_formatting" label="创建时间"></el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
             <el-button
               type="text"
               slot="reference"
-              @click.stop="deleteData(scope.row.id)"
+              @click.stop="deleteData(scope.row.project_id)"
               :disabled="$store.state.userInfo.type == 1"
             >删除</el-button>
             <el-divider direction="vertical"></el-divider>
@@ -49,20 +49,19 @@
     <!-- 编辑添加项目 -->
     <el-dialog title="添加项目" :visible.sync="dialogFormVisible">
       <el-form :model="form" label-width="80px" ref="form" :rules="rules">
-        <el-form-item label="项目名称" prop="title">
-          <el-input v-model="form.title" autocomplete="off" placeholder="项目名称"></el-input>
+        <el-form-item label="项目名称" prop="project_name">
+          <el-input v-model="form.project_name" autocomplete="off" placeholder="项目名称"></el-input>
         </el-form-item>
-        <el-form-item label="版本号" prop="version">
-          <el-input v-model="form.version" autocomplete="off" placeholder="版本号"></el-input>
+        <el-form-item label="版本号" prop="project_version">
+          <el-input v-model="form.project_version" autocomplete="off" placeholder="版本号"></el-input>
         </el-form-item>
         <el-form-item label="项目类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择">
-            <el-option label="pc" value="pc"></el-option>
-            <el-option label="web" value="web"></el-option>
+            <el-option label="pc" value="0"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="项目描述" prop="description">
-          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="form.description"></el-input>
+        <el-form-item label="项目描述" prop="project_description">
+          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="form.project_description"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -80,24 +79,61 @@ import controlShow from "../../mixins/controlShow";
 export default {
   name: "projectList",
   mixins: [controlShow],
+  data() {
+    return {
+        projectList: [],
+        pageSize: 5,
+        currPage: 1,
+        itemCount: 0,
+        loading: true,
+        dialogFormVisible: false,
+        isUpdate: false,
+        form: {
+            project_name: "",
+            project_version: "",
+            project_description: "",
+            project_type: 0,
+        },
+      rules: {
+        title: [
+          { required: true, message: "请输入名称", trigger: "blur" },
+          {
+            min: 2,
+            max: 50,
+            message: "长度在 2 到 50 个字符",
+            trigger: "blur",
+          },
+        ],
+        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        description: [
+          {
+            min: 2,
+            max: 50,
+            message: "长度在 2 到 50 个字符",
+            trigger: "blur",
+          },
+        ],
+        version: [
+          { required: true, message: "请输入版本号", trigger: "blur" },
+          {
+            min: 1,
+            max: 50,
+            message: "长度在 6 到 50 个字符",
+            trigger: "blur",
+          },
+        ],
+      },
+    };
+  },
   methods: {
     jump(route) {
       this.$router.push({ path: "/" + route });
     },
     //获取项目列表
     getProjectList(curr, pageSize) {
-      this.projectList = [{
-        'title': '项目1',
-        'version': 'v1.0.0',
-        'type': 'pc',
-        'textarea': '测试项目文档',
-      }];
-      this.itemCount = this.projectList.length;
-            this.loading = false;
-      return;
       this.loading = true;
       this.$http
-        .get("/project/list", {
+        .get("/projects", {
           params: {
             cp: curr,
             ps: pageSize,
@@ -106,14 +142,15 @@ export default {
         .then(
           (response) => {
             response = response.data;
-            if (response.code === this.HTTP_SUCCESS) {
-              this.projectList = response.data.items;
-              this.itemCount = Number(response.data.count);
+            if (response.http_status === this.HTTP_SUCCESS) {
+              this.projectList = response.data.data;
+              console.log(this.projectList);
+              this.itemCount = Number(response.data.total);
             }
-
             this.loading = false;
           },
-          () => {
+          (error) => {
+            console.log(error);
             this.$message.error("获取数据-操作失败!");
           }
         );
@@ -195,57 +232,11 @@ export default {
       this.getProjectList(page, this.pageSize);
     },
     detail(row) {
-      this.$router.push("/detail/" + row.id);
+      this.$router.push("/detail/" + row.project_id);
     },
   },
   created() {
     this.getProjectList(this.currPage, this.pageSize);
-  },
-  data() {
-    return {
-      projectList: [],
-      pageSize: 5,
-      currPage: 1,
-      itemCount: 0,
-      loading: true,
-      dialogFormVisible: false,
-      isUpdate: false,
-      form: {
-        title: "",
-        version: "",
-        type: "",
-        description: "",
-      },
-      rules: {
-        title: [
-          { required: true, message: "请输入名称", trigger: "blur" },
-          {
-            min: 2,
-            max: 50,
-            message: "长度在 2 到 50 个字符",
-            trigger: "blur",
-          },
-        ],
-        type: [{ required: true, message: "请选择类型", trigger: "blur" }],
-        description: [
-          {
-            min: 2,
-            max: 50,
-            message: "长度在 2 到 50 个字符",
-            trigger: "blur",
-          },
-        ],
-        version: [
-          { required: true, message: "请输入版本号", trigger: "blur" },
-          {
-            min: 1,
-            max: 50,
-            message: "长度在 6 到 50 个字符",
-            trigger: "blur",
-          },
-        ],
-      },
-    };
   },
 };
 </script>

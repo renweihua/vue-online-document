@@ -3,7 +3,6 @@ import store from './store/main';
 import router from "./router";
 import axios from 'axios';
 
-
 //设置默认url
 // axios.defaults.baseURL = getBaseUrl();
 
