@@ -17,7 +17,7 @@ export function removeToken() {
 
 
 export function getUser() {
-    var user = localStorage.getItem(UserKey);
+    var user = JSON.parse(localStorage.getItem(UserKey));
     if (user) return user;
     else return user;
 }

@@ -5,9 +5,7 @@ import {
     Message
 } from 'element-ui';
 import store from '@/store/main.js';
-import {
-    getToken, getUser
-} from '@/utils/auth';
+import { getUser } from '@/utils/auth';
 
 import router from "@/router";
 
@@ -30,37 +28,24 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         // do something before request is sent
+        let userInfo = store.getters.userInfo || getUser();
 
-        if (store.getters.token) {
+        // 设置`Authorization`
+        if (userInfo) {
             // let each request carry token
             // ['X-Token'] is a custom headers key
             // please modify it according to the actual situation
-            config.headers['Authorization'] = getToken();
-        }
-
-        if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8') {
-            if (config.data) {
-                // config.data = JSON.stringify(config.data)
-            }
+            config.headers['Authorization'] = userInfo.access_token;
         }
 
         // 项目内部定义
-        let userInfo = getUser();
         if (userInfo) {
             if (config.method === "get" && config.params) {
-                if (!config.params.token) {
-                    config.params.token = userInfo.token;
-                }
-
                 //附加项目id
                 if (config.params && !config.params.projectId  && !config.params.notProjectId && store.state.project) {
                     config.params.projectId = store.state.project.id;
                 }
             } else if (config.method === "post" && config.data) {
-                if (!config.data.token) {
-                    config.data.token = userInfo.token;
-                }
-
                 //附加项目id
                 if (!config.data.projectId && !config.data.notProjectId && store.state.project) {
                     config.data.projectId = store.state.project.id;

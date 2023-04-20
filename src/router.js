@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "./store/main";
+import { getUser } from '@/utils/auth';
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -168,8 +169,7 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-
-  let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  let userInfo = getUser();
   if (userInfo && from.fullPath === '/') {
     store.commit("saveUserInfo", userInfo);
   }
