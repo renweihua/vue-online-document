@@ -30,6 +30,10 @@
 							@click="clickFoldBtn(index)" v-show="item.childs && item.childs.length > 0"></i>
 						<a href="javascript:;" @click="clientBtn(item, index)">{{item.group_name}}</a>
 					</div>
+					<div class="sort">
+						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index > 0">↑</a>
+						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index + 1 < group.length">↓</a>
+					</div>
 					<el-dropdown placement="left-start" @command="handleCommand" trigger="click" v-show="controlShow()">
 						<span class="el-icon-s-unfold"></span>
 						<el-dropdown-menu slot="dropdown">
@@ -368,6 +372,16 @@
 					justify-content: space-between;
 					padding: 0 20px 0 10px;
 					align-items: center;
+
+					position: relative;
+					.sort{
+					    position: absolute;
+					    right: 50px;
+
+					    a{
+					    	color: #857979;
+					    }
+					}
 
 					i {
 						box-sizing: border-box;
