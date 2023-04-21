@@ -37,6 +37,11 @@ service.interceptors.request.use(
             // please modify it according to the actual situation
             config.headers['Authorization'] = userInfo.access_token;
         }
+        if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8') {
+            if (config.data) {
+                config.data = JSON.stringify(config.data)
+            }
+        }
 
         // 项目内部定义
         if (userInfo) {

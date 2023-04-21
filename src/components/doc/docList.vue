@@ -13,11 +13,11 @@
 				</el-table-column>
 				<el-table-column label="操作">
 					<template slot-scope="scope">
-						<el-button @click="jumpPage('docDetail',scope.row.id)">详情</el-button>
-						<el-button @click="jumpPage('docEdit',scope.row.id)" :disabled="!controlShow()">编辑</el-button>
-						<el-button v-if="$route.params.groupId == -1" type="danger" @click="restoreDoc(scope.row.id)"
+						<el-button @click="jumpPage('docDetail',scope.row.doc_id)">详情</el-button>
+						<el-button @click="jumpPage('docEdit',scope.row.doc_id)" :disabled="!controlShow()">编辑</el-button>
+						<el-button v-if="$route.params.groupId == -1" type="danger" @click="restoreDoc(scope.row.doc_id)"
 							:disabled="!controlShow()">还原</el-button>
-						<el-button v-else type="danger" @click="deleteDoc(scope.row.id)" :disabled="!controlShow()">删除
+						<el-button v-else type="danger" @click="deleteDoc(scope.row.doc_id)" :disabled="!controlShow()">删除
 						</el-button>
 					</template>
 				</el-table-column>
@@ -32,7 +32,9 @@
 
 <script>
 	import controlShow from "../../mixins/controlShow";
-    import { lists } from "@/api/doc"
+	import {
+		lists
+	} from "@/api/doc"
 
 	const CODE_OK = 200;
 	export default {
@@ -144,19 +146,23 @@
 					groupId = 0;
 				}
 
-				const {data, http_status, msg} = await lists({
-						groupId: groupId,
-						project_id: projectId,
-						ps: size,
-						cp: curr,
-						isDeleted: groupId < 0 ? 1 : 0,
-						keyword: keyword,
-					});
-                this.docList = data.data;
-                this.count = Number.parseInt(data.count);
+				const {
+					data,
+					http_status,
+					msg
+				} = await lists({
+					groupId: groupId,
+					project_id: projectId,
+					ps: size,
+					cp: curr,
+					isDeleted: groupId < 0 ? 1 : 0,
+					keyword: keyword,
+				});
+				this.docList = data.data;
+				this.count = Number.parseInt(data.count);
 
-                // 关闭加载进度条
-                this.loading = false;
+				// 关闭加载进度条
+				this.loading = false;
 			},
 			jumpPage(name, docId) {
 				this.$router.push({
@@ -170,7 +176,7 @@
 				this.$http
 					.post("/doc/update", {
 						is_top: data.is_top == 0 ? 0 : 1,
-						id: data.id,
+						id: data.doc_id,
 					})
 					.then((res) => {
 						res = res.data;

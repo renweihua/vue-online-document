@@ -18,10 +18,10 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <!-- <div class="remember">
-          <input type="checkbox" name="remember" id="remember" />
-          <label for="remember">记住密码</label>
-      </div>-->
+            <div class="remember">
+                <input type="checkbox" name="remember" id="remember" />
+                <label for="remember">记住密码</label>
+            </div>
         </div>
     </div>
 </template>

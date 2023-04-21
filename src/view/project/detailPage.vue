@@ -98,10 +98,9 @@
                     this.projectData = data;
                     this.$store.commit("saveProject", data);
                 } else {
-                    this.$message.error("failed:" + msg);
+                    this.$message.error(msg);
                 }
 			},
-
 			jump() {
 				this.$router.push({
 					name: "apiList",

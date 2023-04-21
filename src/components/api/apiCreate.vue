@@ -82,6 +82,8 @@ export default {
           let loadingInstance = this.$loading({ fullscreen: true });
           let data = Object.assign(this.finalData, this.apiInfo);
           data = Object.assign(data, this.apiData);
+          console.log(data);
+          console.log(JSON.stringify(data));
 
           if (data.group_id_second) {
             data.group_id = data.group_id_second;
