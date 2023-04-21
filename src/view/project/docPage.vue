@@ -1,7 +1,7 @@
 <template>
   <div class="doc-page">
     <div class="group-wrapper" v-show=" $route.name == 'docList'">
-      <group :type="type" v-on:change-group="changeGroup" :showIsEdit=" true">全部</group>
+      <group :type="group_type" v-on:change-group="changeGroup" :showIsEdit=" true">全部</group>
     </div>
     <div class="doc-wrapper">
       <div class="btn-wrapper" v-show=" $route.name == 'docList' ">
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       keyword: "",
-      type: 3,
+      group_type: 1,
     };
   },
   methods: {
