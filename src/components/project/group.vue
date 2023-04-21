@@ -28,7 +28,7 @@
 					<div>
 						<i :class=" item.isClickShowChild ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"
 							@click="clickFoldBtn(index)" v-show="item.childs && item.childs.length > 0"></i>
-						<a href="javascript:;" @click="clientBtn(item.id,index)">{{item.group_name}}</a>
+						<a href="javascript:;" @click="clientBtn(item, index)">{{item.group_name}}</a>
 					</div>
 					<el-dropdown placement="left-start" @command="handleCommand" trigger="click" v-show="controlShow()">
 						<span class="el-icon-s-unfold"></span>
@@ -42,7 +42,7 @@
 				<!-- 子分组-start -->
 				<ul v-show="item.childs && item.isClickShowChild === true">
 					<li v-for="(child,index) in item.childs" :key="child.id">
-						<a href="javascript:;" @click="clientBtn(child.id,index,true)">{{child.group_name}}</a>
+						<a href="javascript:;" @click="clientBtn(child,index,true)">{{child.group_name}}</a>
 
 						<el-dropdown placement="left-start" @command="handleCommand" trigger="click"
 							v-show="controlShow()">
@@ -195,7 +195,7 @@
 				}
 			},
 			//点击分组
-			clientBtn(id, index, isChild = false) {
+			clientBtn(group, index, isChild = false) {
 				if (!isChild) {
 					for (const key in this.group) {
 						this.group[key].isClick = false;
@@ -206,7 +206,7 @@
 					}
 				}
 
-				this.$emit("change-group", id);
+				this.$emit("change-group", group ? group.group_id : 0);
 			},
 			showUpdateDiglog(data, parent = null) {
 				this.isFirstUpdate = true;

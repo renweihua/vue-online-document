@@ -151,7 +151,7 @@
 					http_status,
 					msg
 				} = await lists({
-					groupId: groupId,
+					group_id: groupId,
 					project_id: projectId,
 					ps: size,
 					cp: curr,

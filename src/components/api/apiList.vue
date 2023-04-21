@@ -110,7 +110,7 @@
 							ps: ps,
 							project_id,
 							isDeleted: groupId < 0 ? 1 : 0,
-							groupId: groupId,
+							group_id: groupId,
 							keyword,
 						});
                     console.log(data);
