@@ -2,25 +2,25 @@ import request from '@/utils/request'
 
 export async function lists(params) {
     return await request({
-        url: `/apis`,
+        url: `/groups`,
         method: 'get',
         params
     })
 }
 
-export async function detail(api_id) {
+export async function detail(doc_id) {
     return await request({
-        url: `/api-detail`,
+        url: `/group-detail`,
         method: 'get',
         params: {
-            api_id
+            doc_id
         }
     })
 }
 
 export async function create(data) {
     return await request({
-        url: `/doc-create`,
+        url: `/group-create`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/doc-update`,
+        url: `/group-update`,
         method: 'put',
         data
     })
@@ -36,7 +36,7 @@ export async function update(data) {
 
 export async function deleteDoc(data) {
     return await request({
-        url: `/doc-delete`,
+        url: `/group-delete`,
         method: 'delete',
         data
     })

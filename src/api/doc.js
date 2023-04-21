@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
-export function lists(params) {
-    return request({
+export async function lists(params) {
+    return await request({
         url: `/docs`,
         method: 'get',
         params
@@ -18,24 +18,24 @@ export async function detail(doc_id) {
     })
 }
 
-export function create(data) {
-    return request({
+export async function create(data) {
+    return await request({
         url: `/doc-create`,
         method: 'post',
         data
     })
 }
 
-export function update(data) {
-    return request({
+export async function update(data) {
+    return await request({
         url: `/doc-update`,
         method: 'put',
         data
     })
 }
 
-export function deleteDoc(data) {
-    return request({
+export async function deleteDoc(data) {
+    return await request({
         url: `/doc-delete`,
         method: 'delete',
         data

@@ -1,7 +1,7 @@
 <template>
 	<div class="api-page">
 		<div class="group-wrapper" v-show=" $route.name == 'apiList'  ">
-			<group :type="type" v-on:change-group="changeGroup">全部接口</group>
+			<group :type="group_type" v-on:change-group="changeGroup">全部接口</group>
 		</div>
 
 		<div class="api-wrapper">
@@ -29,7 +29,7 @@
 		created() {},
 		data() {
 			return {
-				type: 1,
+				group_type: 0,
 				keyword: "",
 			};
 		},
