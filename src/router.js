@@ -56,7 +56,6 @@ const router = new VueRouter({
 					props: true,
 					redirect: "detailPage",
 					children: [
-
 						{
 							path: "/detail/:projectId",
 							name: "detailPage",

@@ -17,7 +17,7 @@
 </template>
 <script>
 import DocInfo from "./units/docInfo";
-
+import { create } from "@/api/doc";
 const CODE_OK = 200;
 
 export default {
@@ -30,19 +30,18 @@ export default {
       title: "",
       content: "",
       description: "",
-      groupId: null,
-      groupIdSecond:null,
+      groupId: 0,
       groupList: [],
     };
   },
   methods: {
     updateInfo(val) {
       this.title = val.title;
-      this.groupId = val.groupId;
-      this.groupIdSecond = val.groupIdSecond;
+      this.groupId = val.groupId || 0;
     },
     initDocCreate() {
-      this.title = this.content = this.groupId = "";
+        this.groupId = 0;
+      this.title = this.content = "";
     },
     //获取分组列表
     getGroup(pageSize = 10, curr = 1, projectId) {
@@ -75,31 +74,24 @@ export default {
     },
     //创建文档
     createDoc(isAgain) {
-      if (!this.groupId) {
-        this.$message.error("请选择分组");
+      if (this.title.length < 1) {
+        this.$message.error("文档标题不能为空");
         return;
       }
-
-      if (this.title.length < 1) {
-        this.$message.error("标题不能为空");
-      }
-
       this.$confirm("要保存吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        this.$http
-          .post("/doc/create", {
-            title: this.title,
-            content: this.content,
-            group_id: this.groupIdSecond ?  this.groupIdSecond : this.groupId,
+        create({
             project_id: this.$route.params.projectId,
+            doc_name: this.title,
+            content_markdown: this.content,
+            group_id: this.groupId,
           })
           .then((res) => {
-            res = res.data;
-            if (res.code === CODE_OK) {
-              this.$message.success("创建成功！");
+            if (res.http_status === CODE_OK) {
+              this.$message.success(res.msg);
 
               if (isAgain === true) {
                 this.initDocCreate();
