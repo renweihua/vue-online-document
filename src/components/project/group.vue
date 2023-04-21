@@ -27,7 +27,7 @@
 				<div class="list-item-one">
 					<div>
 						<i :class=" item.isClickShowChild ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"
-							@click="clickFoldBtn(index)" v-show="item.childs.length > 0"></i>
+							@click="clickFoldBtn(index)" v-show="item.childs && item.childs.length > 0"></i>
 						<a href="javascript:;" @click="clientBtn(item.id,index)">{{item.group_name}}</a>
 					</div>
 					<el-dropdown placement="left-start" @command="handleCommand" trigger="click" v-show="controlShow()">
@@ -85,7 +85,7 @@
 
 <script>
 	import controlShow from "../../mixins/controlShow";
-	import { create } from "@/api/group"
+	import { lists, create } from "@/api/group"
 
 	const CODE_OK = 200;
 	export default {
@@ -133,40 +133,23 @@
 				}
 			},
 			//获取分组列表
-			getGroup(pageSize, curr, projectId) {
-				this.$http
-					.get("/group/list", {
-						params: {
-							cp: curr,
-							type: this.type,
-							ps: pageSize,
-							projectId: projectId ? projectId : 0,
-						},
-					})
-					.then(
-						(response) => {
-							response = response.data;
-							if (response.code === CODE_OK) {
-								//添加点击状态默认值
-								if (response.data) {
-									for (const key in response.data) {
-										response.data[key].isClick = false;
-										response.data[key].isClickShowChild = false;
-										for (const childKey in response.data[key]["childs"]) {
-											response.data[key]["childs"][childKey].isClick = false;
-										}
-									}
-									this.group = response.data;
-								}
-							}
-						},
-						(res) => {
-							let response = res.data;
-							this.$message.error(
-								"获取数据-操作失败!" + !response.msg ? response.msg : ""
-							);
-						}
-					);
+			async getGroup(pageSize, curr, projectId) {
+				const {data, http_status, msg} = await lists({
+					cp: curr,
+					group_type: this.type,
+					ps: pageSize,
+					project_id: projectId ? projectId : 0,
+				});
+				console.log(data);
+
+				for (const key in data) {
+					data[key].isClick = false;
+					data[key].isClickShowChild = false;
+					for (const childKey in data[key]["childs"]) {
+						data[key]["childs"][childKey].isClick = false;
+					}
+				}
+				this.group = data;
 			},
 			//删除分组
 			delete(id) {
