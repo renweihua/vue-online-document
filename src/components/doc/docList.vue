@@ -23,7 +23,7 @@
 				</el-table-column>
 			</el-table>
 		</div>
-		<div class="page" v-show=" !$route.query.keyword">
+		<div class="page" v-show="!$route.query.keyword">
 			<el-pagination background layout="total,prev, pager, next" :total="count" :page-size="ps" :current-page="cp"
 				@current-change="changePage($event)"></el-pagination>
 		</div>

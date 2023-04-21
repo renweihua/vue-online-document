@@ -8,8 +8,8 @@ export function lists(params) {
     })
 }
 
-export function detail(doc_id) {
-    return request({
+export async function detail(doc_id) {
+    return await request({
         url: `/doc-detail`,
         method: 'get',
         params: {
