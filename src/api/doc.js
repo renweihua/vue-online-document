@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function lists(data) {
+export function lists(params) {
     return request({
         url: `/docs`,
         method: 'get',
-        data
+        params
     })
 }
 
