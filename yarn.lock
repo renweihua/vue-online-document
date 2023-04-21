@@ -2604,6 +2604,15 @@
   "resolved" "https://registry.npm.taobao.org/cli-width/download/cli-width-3.0.0.tgz"
   "version" "3.0.0"
 
+"clipboard@^2.0.4":
+  "integrity" "sha512-C+0bbOqkezLIsmWSvlsXS0Q0bmkugu7jcfMIACB+RDEntIzQIkdr148we28AfSloQLRdZlYL/QYyrq05j/3Faw=="
+  "resolved" "https://registry.npmjs.org/clipboard/-/clipboard-2.0.11.tgz"
+  "version" "2.0.11"
+  dependencies:
+    "good-listener" "^1.2.2"
+    "select" "^1.1.2"
+    "tiny-emitter" "^2.0.0"
+
 "clipboardy@^2.3.0":
   "integrity" "sha1-PCkDZQxo5GqRs4iYW8J3QofbopA="
   "resolved" "https://registry.nlark.com/clipboardy/download/clipboardy-2.3.0.tgz"
@@ -3332,6 +3341,11 @@
   "integrity" "sha1-3zrhmayt+31ECqrgsp4icrJOxhk="
   "resolved" "https://registry.nlark.com/delayed-stream/download/delayed-stream-1.0.0.tgz"
   "version" "1.0.0"
+
+"delegate@^3.1.2":
+  "integrity" "sha512-IofjkYBZaZivn0V8nnsMJGBr4jVLxHDheKSW88PyxS5QC4Vo9ZbZVvhzlSxY87fVq3STR6r+4cGepyHkcWOQSw=="
+  "resolved" "https://registry.npmjs.org/delegate/-/delegate-3.2.0.tgz"
+  "version" "3.2.0"
 
 "delegates@^1.0.0":
   "integrity" "sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o="
@@ -4500,6 +4514,13 @@
     "glob" "~7.1.1"
     "lodash" "~4.17.10"
     "minimatch" "~3.0.2"
+
+"good-listener@^1.2.2":
+  "integrity" "sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw=="
+  "resolved" "https://registry.npmjs.org/good-listener/-/good-listener-1.2.2.tgz"
+  "version" "1.2.2"
+  dependencies:
+    "delegate" "^3.1.2"
 
 "graceful-fs@^4.1.11", "graceful-fs@^4.1.15", "graceful-fs@^4.1.2", "graceful-fs@^4.1.6", "graceful-fs@^4.2.3":
   "integrity" "sha1-5BK40z9eAGWTy9PO5t+fLOu+gCo="
@@ -7894,6 +7915,11 @@
   "resolved" "https://registry.nlark.com/select-hose/download/select-hose-2.0.0.tgz"
   "version" "2.0.0"
 
+"select@^1.1.2":
+  "integrity" "sha512-OwpTSOfy6xSs1+pwcNrv0RBMOzI39Lp3qQKUTPVVPRjCdNa5JH/oPRiqsesIskK8TVgmRiHwO4KXlV2Li9dANA=="
+  "resolved" "https://registry.npmjs.org/select/-/select-1.1.2.tgz"
+  "version" "1.1.2"
+
 "selfsigned@^1.10.8":
   "integrity" "sha1-JJKc2Qb+D0S20B+yOZmnOVN6y+k="
   "resolved" "https://registry.nlark.com/selfsigned/download/selfsigned-1.10.11.tgz"
@@ -8722,6 +8748,11 @@
   "resolved" "https://registry.npm.taobao.org/timsort/download/timsort-0.3.0.tgz"
   "version" "0.3.0"
 
+"tiny-emitter@^2.0.0":
+  "integrity" "sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q=="
+  "resolved" "https://registry.npmjs.org/tiny-emitter/-/tiny-emitter-2.1.0.tgz"
+  "version" "2.1.0"
+
 "tmp@^0.0.33":
   "integrity" "sha1-bTQzWIl2jSGyvNoKonfO07G/rfk="
   "resolved" "https://registry.npm.taobao.org/tmp/download/tmp-0.0.33.tgz"
@@ -9130,6 +9161,13 @@
   "resolved" "https://registry.nlark.com/vue-hot-reload-api/download/vue-hot-reload-api-2.3.4.tgz"
   "version" "2.3.4"
 
+"vue-json-viewer@^2.2.22":
+  "integrity" "sha512-3oPH5BxoUWva/qp7wNJj+15FBXyi9Yu5VDW4mCWivjHR1pUpMv34fjqqxML7jh2uOqm1S/3Xks5nQ5JjC5+OWw=="
+  "resolved" "https://registry.npmjs.org/vue-json-viewer/-/vue-json-viewer-2.2.22.tgz"
+  "version" "2.2.22"
+  dependencies:
+    "clipboard" "^2.0.4"
+
 "vue-loader-v16@npm:vue-loader@^16.1.0":
   "integrity" "sha1-CcTgcSRmiZ40uZpoZSTxkWX7KJI="
   "resolved" "https://registry.nlark.com/vue-loader/download/vue-loader-16.5.0.tgz?cache=0&sync_timestamp=1628666767864&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue-loader%2Fdownload%2Fvue-loader-16.5.0.tgz"
@@ -9176,7 +9214,7 @@
   "resolved" "https://registry.nlark.com/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^ 3.0.0 || ^ 2.0.0", "vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.17", "vue@^2.6.11", "vue@^2.6.12":
+"vue@^ 3.0.0 || ^ 2.0.0", "vue@^2 || ^3.0.0-0", "vue@^2.0.0", "vue@^2.5.17", "vue@^2.6.11", "vue@^2.6.12", "vue@^2.6.9":
   "integrity" "sha1-5RqlJQJQ1Wmj+606ilpofWA24jU="
   "resolved" "https://registry.nlark.com/vue/download/vue-2.6.14.tgz?cache=0&sync_timestamp=1629217665911&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue%2Fdownload%2Fvue-2.6.14.tgz"
   "version" "2.6.14"
