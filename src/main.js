@@ -12,6 +12,9 @@ import "mavon-editor/dist/css/index.css";
 //element ui
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+// 展示json数据
+import JsonViewer from 'vue-json-viewer'
+Vue.use(JsonViewer);
 
 // 定义Http请求状态
 Vue.prototype.HTTP_SUCCESS = 200;
