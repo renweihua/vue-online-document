@@ -73,14 +73,10 @@
                                     setUser(userInfo);
                                     this.$router.push("/").catch(() => {});
                                 } else {
-                                    this.$message.error(response.msg);
                                     removeUser();
                                     this.$router.push("/login").catch(() => {});
                                 }
                                 this.loading = false;
-                            },
-                            () => {
-                                this.$message.error("请求失败!");
                             }
                         );
                     } else {

@@ -121,7 +121,6 @@ service.interceptors.response.use(
                     break;
                 case 401: // 认证失败
                     msg = error.response.data.msg;
-                    Vue.prototype.$message.error("请重新登录");
                     localStorage.removeItem("userInfo");
                     router.push("/login");
 
