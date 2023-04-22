@@ -19,3 +19,14 @@ yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
 yarn config set registry https://registry.npm.taobao.org -g
 ### look config
 yarn config get registry
+
+
+### 功能列表
+- Auth
+	- [X] 登录
+- 项目管理 
+	- [X] 列表
+	- [X] 详情
+	- [X] 创建
+	- 编辑
+	- 删除

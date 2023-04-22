@@ -278,6 +278,8 @@
 				});
 
 				if (http_status === CODE_OK) {
+					this.form.group_name = '';
+					this.form.parent_id = 0;
 					this.$message.success(msg);
 				} else {
 					this.$message.error(msg);
