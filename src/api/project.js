@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export async function getProjects(data) {
+export async function lists(data) {
     return await request({
         url: `/projects`,
         method: 'get',

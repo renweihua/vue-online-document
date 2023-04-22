@@ -49,7 +49,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false;$refs.form.resetFields();isUpdate = false;">取 消</el-button>
-				<el-button type="primary" @click=" isUpdate ? update(): create() ; ">确 定</el-button>
+				<el-button type="primary" @click=" isUpdate ? updatProjecte(): createProject() ; ">确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 编辑添加项目-结束 -->
@@ -59,7 +59,8 @@
 <script>
 	import controlShow from "../../mixins/controlShow";
 	import {
-		getProjects
+		lists,
+		create
 	} from '@/api/project';
 	export default {
 		name: "projectList",
@@ -127,28 +128,22 @@
 			//获取项目列表
 			async getProjectList(curr, pageSize) {
 				this.loading = true;
-                const {data, http_status, msg} = await getProjects(this.listQuery);
+                const {data, http_status, msg} = await lists(this.listQuery);
                 this.projectList = data.data;
                 this.itemCount = Number(data.total);
                 this.loading = false;
 			},
 			//创建项目
-			create() {
+			createProject() {
 				this.$refs.form.validate((valid) => {
 					if (valid) {
-						this.$http
-							.post("/project/create", {
-								...this.form,
-							})
+						create(this.form)
 							.then((res) => {
-								let response = res.data;
-								if (response.code === CODE_OK) {
-									this.$message.success("成功!");
+								if (res.http_status === this.HTTP_SUCCESS) {
+									this.$message.success(res.msg);
 									this.getProjectList(this.currPage, this.pageSize);
 									this.dialogFormVisible = false;
 									this.$refs.form.resetFields();
-								} else {
-									this.$message.error(response.msg);
 								}
 							});
 					}
@@ -179,7 +174,7 @@
 					.catch(() => {});
 			},
 			//更新
-			update() {
+			updateProject() {
 				this.$refs.form.validate((valid) => {
 					if (valid) {
 						this.$http
