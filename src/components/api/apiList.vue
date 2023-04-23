@@ -38,7 +38,7 @@
 				</el-table-column>
 			</el-table>
 		</div>
-		<div class="page" v-show="count > 0 && !$route.query.keyword">
+		<div class="page" v-show="count > 0 && !$route.query.search">
 			<el-pagination background layout="total,prev, pager, next" :total="count" :page-size="ps" :current-page="cp"
 				@current-change="changePage($event)"></el-pagination>
 		</div>
@@ -100,7 +100,7 @@
 					.catch(() => {});
 			},
 			//获取api列表
-			async getApiList(ps, cp, project_id, groupId, keyword) {
+			async getApiList(ps, cp, project_id, groupId, search) {
 				const {
                     data,
                     http_status,
@@ -111,7 +111,7 @@
 							project_id,
 							isDeleted: groupId < 0 ? 1 : 0,
 							group_id: groupId,
-							keyword,
+							search,
 						});
                     console.log(data);
 
@@ -194,10 +194,10 @@
 		components: {},
 		watch: {
 			$route: function(to) {
-				if (to.query.keyword) {
+				if (to.query.search) {
 					this.cp = 1;
 
-					this.getApiList(this.ps, this.cp, to.params.projectId, 0, to.query.keyword);
+					this.getApiList(this.ps, this.cp, to.params.projectId, 0, to.query.search);
 					this.loading = true;
 				} else {
 					this.cp = 1;

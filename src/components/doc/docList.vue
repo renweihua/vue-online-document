@@ -23,7 +23,7 @@
 				</el-table-column>
 			</el-table>
 		</div>
-		<div class="page" v-show="!$route.query.keyword">
+		<div class="page" v-show="!$route.query.search">
 			<el-pagination background layout="total,prev, pager, next" :total="count" :page-size="ps" :current-page="cp"
 				@current-change="changePage($event)"></el-pagination>
 		</div>
@@ -136,7 +136,7 @@
 				});
 			},
 			//获取文档
-			async getDocList(size, curr, groupId, projectId, keyword = "") {
+			async getDocList(size, curr, groupId, projectId, search = "") {
 				if (!projectId) {
 					this.$message.error("异常错误");
 					return;
@@ -156,7 +156,7 @@
 					ps: size,
 					cp: curr,
 					isDeleted: groupId < 0 ? 1 : 0,
-					keyword: keyword,
+					search,
 				});
 				this.docList = data.data;
 				this.count = Number.parseInt(data.count);
@@ -189,9 +189,9 @@
 		},
 		watch: {
 			$route: function(to) {
-				if (to.query.keyword) {
+				if (to.query.search) {
 					this.cp = 1;
-					this.getDocList(this.ps, this.cp, 0, to.params.projectId, to.query.keyword);
+					this.getDocList(this.ps, this.cp, 0, to.params.projectId, to.query.search);
 					this.loading = true;
 				} else {
 					this.cp = 1;
