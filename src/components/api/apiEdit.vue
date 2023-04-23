@@ -13,7 +13,7 @@
 			</el-tab-pane>
 			<el-tab-pane label="接口备注" name="second">
 				<!-- 详细说明 -->
-				<detailDescription :description="apiData.description" v-on:update="apiData.description=$event" />
+				<detailDescription :description="apiData.api_description" v-on:update="apiData.api_description=$event" />
 			</el-tab-pane>
 		</el-tabs>
 
@@ -89,37 +89,23 @@
 				let url = this.isCopy ? "/api/create" : "/api/update";
 				this.$refs.apiInfo.$refs.form.validate((validate) => {
 					if (validate) {
-						let data = JSON.stringify(this.apiData);
-						data = JSON.parse(data);
+						let detail = JSON.stringify(this.apiData);
+						detail = JSON.parse(detail);
 
-						if (data.group_id_second) {
-							data.group_id = data.group_id_second;
+						if (detail.group_id_second) {
+							detail.group_id = detail.group_id_second;
 						}
 
-						this.$http
-							.post(url, {
-								id: this.apiId,
-								group_id: this.apiData.group_id,
-								project_id: this.$route.params.projectId,
-								data: JSON.stringify(data),
-							})
-							.then((response) => {
-								response = response.data;
-								if (response.code === CODE_OK) {
-									this.$message({
-										message: "保存成功！",
-										type: "success",
-									});
+						update(detail)
+							.then((res) => {
+                                console.log(res);
+								if (res.http_status === CODE_OK) {
+									this.$message.success(res.msg);
 									this.$router.push({
 										name: "apiDetail",
 										params: {
 											apiId: this.apiId
 										},
-									});
-								} else {
-									this.$message({
-										message: !response.msg ? response.msg : "",
-										type: "error",
 									});
 								}
 							});

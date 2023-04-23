@@ -29,7 +29,7 @@ export async function detail(api_id) {
 
 export async function create(data) {
     return await request({
-        url: `/doc-create`,
+        url: `/api-create`,
         method: 'post',
         data
     })
@@ -37,7 +37,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/doc-update`,
+        url: `/api-update`,
         method: 'put',
         data
     })
@@ -45,7 +45,7 @@ export async function update(data) {
 
 export async function deleteDoc(data) {
     return await request({
-        url: `/doc-delete`,
+        url: `/api-delete`,
         method: 'delete',
         data
     })
