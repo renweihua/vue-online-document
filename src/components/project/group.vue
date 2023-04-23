@@ -89,7 +89,7 @@
 
 <script>
 	import controlShow from "../../mixins/controlShow";
-	import { lists, create } from "@/api/group"
+	import { lists, create } from "@/api/group";
 
 	const CODE_OK = 200;
 	export default {
@@ -144,7 +144,6 @@
 					ps: pageSize,
 					project_id: projectId ? projectId : 0,
 				});
-				console.log(data);
 
 				for (const key in data) {
 					data[key].isClick = false;

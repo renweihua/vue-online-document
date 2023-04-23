@@ -21,10 +21,10 @@
 
     <requestParams
       :propertyList="propertyList"
-      v-on:update:header="apiData.http_request_header = $event"
-      v-on:update:param="apiData.http_request_params = $event"
+      v-on:update:header="apiData.http_header = $event"
+      v-on:update:param="apiData.http_params = $event"
     />
-    <returnParams :propertyList="propertyList" v-on:update="apiData.http_return_params = $event" />
+    <returnParams :propertyList="propertyList" v-on:update="apiData.response_params = $event" />
   </div>
 </template>
 
@@ -54,12 +54,12 @@ export default {
       description: "",
       apiInfo: {},
       apiData: {
-        http_request_header: [], //请求头
-        http_request_params: [], //请求参数
-        http_return_params: [], //返回参数
-        http_return_sample: {
-          returnDataSuccess: "", //返回数据成功
-          returnDataFailed: "", //返回数据失败
+        http_header: [], //请求头
+        http_params: [], //请求参数
+        response_params: [], //返回参数
+        response_sample: {
+          success: "", //返回数据成功
+          failed: "", //返回数据失败
         },
       },
       finalData: {},

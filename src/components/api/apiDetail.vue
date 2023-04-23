@@ -16,7 +16,7 @@
 			<el-divider direction="vertical"></el-divider>
 			<em>
 				请求协议:
-				<i>{{apiData.protocol_type ? apiData.protocol_type : 'unknown'}}</i>
+				<i>{{apiData.http_protocol ? apiData.http_protocol : 'unknown'}}</i>
 			</em>
 			<el-divider direction="vertical"></el-divider>
 			<em>
@@ -24,7 +24,7 @@
 				<i>{{apiData.http_method ? apiData.http_method : 'unknown'}}</i>
 			</em>
 			<el-divider direction="vertical"></el-divider>
-			<i>{{apiData.url ? apiData.url : 'unknown'}}</i>
+			<i>{{apiData.api_url ? apiData.api_url : 'unknown'}}</i>
 			<el-divider direction="vertical"></el-divider>
 
 			<i>{{apiData.api_name ? apiData.api_name : 'unknown'}}</i>
@@ -133,15 +133,15 @@
 			<div v-if="apiData.response_sample">
 				<h5>响应数据示例</h5>
 
-				<h5 v-show=" apiData.response_sample.returnDataSuccess">成功</h5>
-				<pre v-show="apiData.response_sample.returnDataSuccess" v-html="syntaxHighlight(apiData.response_sample.returnDataSuccess)"></pre>
-				<json-viewer :value="apiData.response_sample.returnDataSuccess" copyable theme="my-awesome-json-theme"></json-viewer>
+				<h5 v-show=" apiData.response_sample.success">成功</h5>
+				<pre v-show="apiData.response_sample.success" v-html="syntaxHighlight(apiData.response_sample.success)"></pre>
+				<json-viewer :value="apiData.response_sample.success" copyable theme="my-awesome-json-theme"></json-viewer>
 
 
-				<div v-if="apiData.response_sample.returnDataFailed">
-					<h5 v-show="apiData.response_sample.returnDataFailed">失败</h5>
-					<pre v-show="apiData.response_sample.returnDataFailed" v-html="syntaxHighlight(apiData.response_sample.returnDataFailed)"></pre>
-					<json-viewer :value="apiData.response_sample.returnDataFailed" copyable theme="my-awesome-json-theme"></json-viewer>
+				<div v-if="apiData.response_sample.failed">
+					<h5 v-show="apiData.response_sample.failed">失败</h5>
+					<pre v-show="apiData.response_sample.failed" v-html="syntaxHighlight(apiData.response_sample.failed)"></pre>
+					<json-viewer :value="apiData.response_sample.failed" copyable theme="my-awesome-json-theme"></json-viewer>
 				</div>
 			</div>
 		</div>

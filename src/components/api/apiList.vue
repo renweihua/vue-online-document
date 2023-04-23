@@ -17,7 +17,7 @@
 							style="font-style:normal; display:inline-block;margin-left:15px;font-weight:600;">{{scope.row.api_url}}</em>
 					</template>
 				</el-table-column>
-				<el-table-column prop="protocol_type" label="协议" width="80"></el-table-column>
+				<el-table-column prop="http_protocol" label="协议" width="80"></el-table-column>
 				<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 				<el-table-column prop label="操作" align="center">
 					<template slot-scope="scope">
@@ -113,7 +113,6 @@
 							group_id: groupId,
 							search,
 						});
-                    console.log(data);
 
                 this.apiList = data.data;
                 this.count = parseInt(data.count);
