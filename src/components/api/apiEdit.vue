@@ -29,7 +29,8 @@
 </template>
 
 <script>
-    import { properties, detail, update } from "@/api/api";
+    import { properties } from "@/api/commom";
+    import { detail, update } from "@/api/api";
     import { lists as groups } from "@/api/group";
 	import returnParams from "./units/returnDataParams.vue";
 	import requestParams from "./units/requestDataParams.vue";
