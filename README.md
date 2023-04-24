@@ -36,3 +36,9 @@ yarn config get registry
 	- [X] 创建
 	- [X] 编辑
 	- 删除
+- 文档管理 
+	- [X] 列表
+	- [X] 详情
+	- [X] 创建
+	- [X] 编辑
+	- 删除

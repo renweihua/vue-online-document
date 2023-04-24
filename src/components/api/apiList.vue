@@ -29,10 +29,10 @@
 
 						<el-popconfirm v-else title="确定要删除这个api?" placement="top" @confirm="delApi(scope.row.api_id)"
 							width="200">
-							<el-button slot="reference" :disabled="!controlShow()">删除</el-button>
+							<el-button type="danger" slot="reference" :disabled="!controlShow()">删除</el-button>
 						</el-popconfirm>
 
-						<el-button type="warning" plain @click="jumpPage('edit', scope.row.api_id)"
+						<el-button type="primary" plain @click="jumpPage('edit', scope.row.api_id)"
 							:disabled="!controlShow()">编辑</el-button>
 					</template>
 				</el-table-column>

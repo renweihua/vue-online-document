@@ -18,7 +18,7 @@
       </li>
       <li>
         <span class="span-label">标题:</span>
-        <el-input v-model="content.title" placeholder="请输入标题" style="width:50%"></el-input>
+        <el-input v-model="content.doc_name" placeholder="请输入标题" style="width:50%"></el-input>
       </li>
     </ul>
   </div>
@@ -39,7 +39,7 @@ export default {
       content: {
         groupId: null,
         groupIdSecond: null,
-        title: "",
+        doc_name: "",
       },
       childGroups: [],
     };
@@ -78,7 +78,7 @@ export default {
     doc: function (val) {
       this.content.groupId = val.group_id;
       this.content.groupIdSecond = val.group_id_second;
-      this.content.title = val.title;
+      this.content.doc_name = val.doc_name;
       this.updateChilds();
     },
     groupList: function () {

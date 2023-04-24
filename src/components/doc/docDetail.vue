@@ -10,7 +10,7 @@
 		<div class="doc-detail" v-if="doc">
 			<div class="info">
 				<h3>{{doc.doc_name}}</h3>
-				<span>作者:{{doc.user_info.nick_name}}</span>
+				<span>作者:{{doc.user_info ? doc.user_info.nick_name : '未知'}}</span>
 				<span>{{doc.time_formatting}}</span>
 				<span>阅读次数:{{doc.view_count}}</span>
 				<span>点赞次数:{{doc.like_count}}</span>
