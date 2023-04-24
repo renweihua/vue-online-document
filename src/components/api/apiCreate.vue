@@ -21,18 +21,19 @@
 </template>
 
 <script>
-    import { properties } from "@/api/commom";
     import { detail, create } from "@/api/api";
     import { lists as groups } from "@/api/group";
 	import returnParams from "./units/returnDataParams.vue";
 	import requestParams from "./units/requestDataParams.vue";
 	import apiInfo from "./units/apiInfo.vue";
 	import detailDescription from "./units/detailDescription.vue";
+	import getCommonProperty from "../../mixins/getCommonProperty";
 
 	const CODE_OK = 200;
 	export default {
 		name: "apiCreate",
 		props: {},
+		mixins: [getCommonProperty],
 		created() {
 			this.getGroup();
 			this.getProperty();
@@ -122,11 +123,6 @@
                     group_type: 0, // API分组
                 });
                 this.groupList = data;
-            },
-			//获取创建api的默认属性
-            async getProperty() {
-                const {data, http_status, msg} = await properties();
-                this.propertyList = data;
             },
 		},
 		components: {

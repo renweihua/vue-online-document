@@ -29,19 +29,21 @@
 </template>
 
 <script>
-    import { properties } from "@/api/commom";
     import { detail, update } from "@/api/api";
     import { lists as groups } from "@/api/group";
 	import returnParams from "./units/returnDataParams.vue";
 	import requestParams from "./units/requestDataParams.vue";
 	import apiInfo from "./units/apiInfo.vue";
 	import detailDescription from "./units/detailDescription.vue";
+	import getCommonProperty from "../../mixins/getCommonProperty";
+	
 	const CODE_OK = 200;
 	export default {
 		name: "apiEdit",
 		props: {
 			apiId: [Number, String],
 		},
+		mixins: [getCommonProperty],
 		created() {
 			this.getApiDetail();
 			this.getGroup();
@@ -120,11 +122,6 @@
 					group_type: 0, // API分组
 				});
                 this.groupList = data;
-			},
-			//获取通用属性
-			async getProperty() {
-				const {data, http_status, msg} = await properties();
-                this.propertyList = data;
 			},
 		},
 		components: {
