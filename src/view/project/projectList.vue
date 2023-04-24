@@ -37,8 +37,8 @@
 				<el-form-item label="版本号" prop="project_version">
 					<el-input v-model="form.project_version" autocomplete="off" placeholder="版本号"></el-input>
 				</el-form-item>
-				<el-form-item label="项目类型" prop="type">
-					<el-select v-model="form.type" placeholder="请选择">
+				<el-form-item label="项目类型" prop="project_type">
+					<el-select v-model="form.project_type" placeholder="请选择">
 						<el-option label="pc" value="0"></el-option>
 					</el-select>
 				</el-form-item>
@@ -49,7 +49,7 @@
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false;$refs.form.resetFields();isUpdate = false;">取 消</el-button>
-				<el-button type="primary" @click=" isUpdate ? updatProjecte(): createProject() ; ">确 定</el-button>
+				<el-button type="primary" @click=" isUpdate ? updateProject(): createProject() ; ">确 定</el-button>
 			</div>
 		</el-dialog>
 		<!-- 编辑添加项目-结束 -->
@@ -60,7 +60,8 @@
 	import controlShow from "../../mixins/controlShow";
 	import {
 		lists,
-		create
+		create,
+		update
 	} from '@/api/project';
 	export default {
 		name: "projectList",
@@ -81,7 +82,7 @@
 					project_type: 0,
 				},
 				rules: {
-					title: [{
+					project_name: [{
 							required: true,
 							message: "请输入名称",
 							trigger: "blur"
@@ -93,18 +94,18 @@
 							trigger: "blur",
 						},
 					],
-					type: [{
+					project_type: [{
 						required: true,
 						message: "请选择类型",
 						trigger: "blur"
 					}],
-					description: [{
+					project_description: [{
 						min: 2,
 						max: 50,
 						message: "长度在 2 到 50 个字符",
 						trigger: "blur",
 					}, ],
-					version: [{
+					project_version: [{
 							required: true,
 							message: "请输入版本号",
 							trigger: "blur"
@@ -177,19 +178,14 @@
 			updateProject() {
 				this.$refs.form.validate((valid) => {
 					if (valid) {
-						this.$http
-							.post("/project/update", {
-								...this.form,
-							})
+						update(this.form)
 							.then((res) => {
 								let response = res.data;
-								if (response.code === CODE_OK) {
-									this.$message.success("成功!");
+								if (res.http_status === this.HTTP_SUCCESS) {
+									this.$message.success(res.msg);
 									this.dialogFormVisible = false;
 									this.$refs.updateData.resetFields();
 									this.getProjectList(this.currPage, this.pageSize);
-								} else {
-									this.$message.error("失败!" + response.msg);
 								}
 								this.update = false;
 							})
