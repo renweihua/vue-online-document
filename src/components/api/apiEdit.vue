@@ -116,7 +116,7 @@
 			async getGroup() {
 				const {data, http_status, msg} = await groups({
 					project_id: this.$route.params.projectId,
-					group_type: 0, // 文档分组
+					group_type: 0, // API分组
 				});
                 this.groupList = data;
 			},
