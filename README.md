@@ -9,7 +9,7 @@
 yarn  or yarn install
 
 ## run
-yarn serve 
+yarn serve or npm run serve
 
 ## build
 yarn build

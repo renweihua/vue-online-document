@@ -15,13 +15,13 @@ Vue.use(VueRouter);
 const router = new VueRouter({
 	routes: [{
 			path: "/register",
-			component: resolve => require(['@/view/user/register'], resolve),
+			component: resolve => require(['@/view/auth/register'], resolve),
 			name: "register"
 		},
 		{
 			path: "/login",
 			name: "userLogin",
-			component: resolve => require(['@/view/user/login'], resolve)
+			component: resolve => require(['@/view/auth/login'], resolve)
 		},
 		{
 			path: "/",
