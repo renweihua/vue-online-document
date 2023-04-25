@@ -34,9 +34,9 @@
 				<el-divider content-position="left">公 告</el-divider>
 				<el-table :data="docList" stripe style="width: 100%" v-loading="loading" border
 					@row-click="tableRowClick">
-					<el-table-column prop="title" label="名称" width="180"></el-table-column>
-					<el-table-column prop="nick_name" label="创建者" width="180"></el-table-column>
-					<el-table-column prop="create_time" label="创建时间"></el-table-column>
+					<el-table-column prop="doc_name" label="文档名称" width="180"></el-table-column>
+					<el-table-column prop="user_info.nick_name" label="创建者" width="180"></el-table-column>
+					<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 				</el-table>
 			</div>
 
@@ -53,7 +53,10 @@
 	import {
 		getProjectDetail
 	} from "@/api/project"
-	const CODE_OK = 200;
+	import {
+		lists as docs
+	} from "@/api/doc"
+
 	export default {
 		name: "detailPage",
 		props: {
@@ -111,32 +114,15 @@
 				});
 			},
 			//获取文档
-			getDocList(ps = 10, cp = 1) {
-				this.$http
-					.get("/doc/list", {
-						params: {
-							projectId: this.$route.params.projectId,
-							ps,
-							cp,
-							isTop: 1,
-						},
-					})
-					.then(
-						(response) => {
-							response = response.data;
-							if (response.code === CODE_OK) {
-								this.docList = response.data.items;
-								this.count = Number.parseInt(response.data.count);
-								this.loading = false;
-							}
-						},
-						(res) => {
-							let response = res.data;
-							this.$message.error(
-								"获取数据-操作失败!" + !response.msg ? response.msg : ""
-							);
-						}
-					);
+			async getDocList(cp = 1) {
+				const {data, http_status, msg} = await docs({
+						project_id: this.$route.params.projectId,
+						page: cp,
+						isTop: 1,
+					});
+				this.docList = data.data;
+				this.count = Number.parseInt(data.total);
+				this.loading = false;
 			},
 		},
 		components: {
