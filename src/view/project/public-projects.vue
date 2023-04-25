@@ -2,7 +2,7 @@
 	<div class="project-list">
 		<!-- 项目列表-开始 -->
 		<el-row :gutter="12">
-			<el-col :span="10" v-for="(item, key) in projectList" :key="key">
+			<el-col :span="10" v-for="(item, key) in projectList" :key="key" @click.stop="detail(item);">
 				<div class="grid-content bg-purple">
 					<el-card class="box-card" shadow="hover">
 						<div slot="header" class="clearfix">
@@ -12,7 +12,7 @@
 						<div class="text item" v-html="item.project_description"></div>
 						<div class="bottom clearfix">
 							<time class="time">{{ item.time_formatting }}</time>
-							<el-button type="text" class="button">查看</el-button>
+							<el-button type="text" class="button" @click.stop="detail(item);">查看</el-button>
 						</div>
 					</el-card>
 				</div>

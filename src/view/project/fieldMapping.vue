@@ -13,9 +13,15 @@
 					<el-form-item label="字段名" prop="field_name">
 						<el-input v-model="fieldMapping.field_name" autocomplete="off" placeholder="字段名"></el-input>
 					</el-form-item>
-					<el-form-item label="类型" prop="type">
-						<el-select v-model="fieldMapping.field_type" placeholder="请选择类型" v-if="propertyList.filed_type">
-                            <el-option v-for="item in propertyList.filed_type" :key="item" :label="item" :value="item"></el-option>
+					<el-form-item label="字段类型" prop="type">
+						<el-select v-model="fieldMapping.field_type" placeholder="请选择字段类型" v-if="propertyList.filed_type" filterable>
+							<el-option-group
+				                v-for="(group, index) in propertyList.filed_type"
+				                :key="index"
+				                :label="group.label"
+				            >
+                            	<el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+                            </el-option-group>
 						</el-select>
 					</el-form-item>
 					<el-form-item label="描述" prop="field_description">
