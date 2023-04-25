@@ -34,7 +34,7 @@ export async function update(data) {
     })
 }
 
-export async function deleteDoc(data) {
+export async function deleteFieldMapping(data) {
     return await request({
         url: `/field-mapping/delete`,
         method: 'delete',

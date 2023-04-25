@@ -13,10 +13,10 @@
 					<el-form-item label="字段名" prop="field_name">
 						<el-input v-model="fieldMapping.field_name" autocomplete="off" placeholder="字段名"></el-input>
 					</el-form-item>
-					<el-form-item label="字段类型" prop="type">
-						<el-select v-model="fieldMapping.field_type" placeholder="请选择字段类型" v-if="propertyList.filed_type" filterable>
+					<el-form-item label="字段类型" prop="field_type">
+						<el-select v-model="fieldMapping.field_type" placeholder="请选择字段类型" v-if="propertyList.field_type" filterable>
 							<el-option-group
-				                v-for="(group, index) in propertyList.filed_type"
+				                v-for="(group, index) in propertyList.field_type"
 				                :key="index"
 				                :label="group.label"
 				            >
@@ -46,7 +46,7 @@
 				<template slot-scope="scope" v-show="!controlShow()">
 					<el-button type="primary" @click="updateAction(scope.row) ">编辑</el-button>
 					<el-divider direction="vertical"></el-divider>
-					<el-button slot="reference" type="danger" @click="del(scope.row.id)">删除</el-button>
+					<el-button slot="reference" type="danger" @click="del(scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -65,7 +65,8 @@
 	import {
 		lists,
 		create,
-		update
+		update,
+		deleteFieldMapping
 	} from '@/api/field-mapping';
 
 	const CODE_OK = 200;
@@ -92,6 +93,7 @@
 				fieldList: [],
 				fieldMapping: {
 					project_id: this.projectId,
+					field_type: 'string',
 				},
 				rules: {
 					field_name: [{
@@ -108,38 +110,26 @@
 					],
 					field_type: [{
 						required: true,
-						message: "请选择类型",
+						message: "请选择字段数据类型",
 						trigger: "blur"
 					}],
-					description: [{
-						min: 2,
-						max: 50,
-						message: "长度在 2 到 50 个字符",
-						trigger: "blur",
-					}, ],
 				},
 			};
 		},
 		methods: {
-			del(id) {
-				this.$confirm("此操作将删除该记录, 是否继续?", "提示", {
+			del(row) {
+				this.$confirm("此操作将删除`" + row.field_name + "`该字段映射吗?", "删除提示", {
 						confirmButtonText: "确定",
 						cancelButtonText: "取消",
 						type: "warning",
 					})
 					.then(() => {
-						this.$http
-							.post("/field-mapping/delete", {
-								id,
-							})
+						deleteFieldMapping({id:row.id})
 							.then(
 								(res) => {
-									let response = res.data;
-									if (response.code === CODE_OK) {
-										this.$message.success("成功!");
+									if (res.http_status === CODE_OK) {
+										this.$message.success(res.msg);
 										this.getFieldList();
-									} else {
-										this.$message.error(response.msg);
 									}
 								},
 								() => {
