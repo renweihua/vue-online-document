@@ -49,14 +49,13 @@
 				this.title = this.content = "";
 			},
 			//获取分组列表
-			async getGroup(pageSize = 10, curr = 1, projectId) {
+			async getGroup(curr = 1, projectId) {
 				const {
 					data,
 					http_status,
 					msg
 				} = await groups({
-					cp: curr,
-					ps: pageSize,
+					page: curr,
 					project_id: projectId ? projectId : 0,
 					group_type: 1, // 文档分组
 				});
@@ -96,7 +95,7 @@
 			},
 		},
 		created() {
-			this.getGroup(100, 1, this.$route.params.projectId);
+			this.getGroup(1, this.$route.params.projectId);
 		},
 	};
 </script>

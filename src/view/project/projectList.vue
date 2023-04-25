@@ -24,7 +24,7 @@
 			</el-table>
 		</div>
 		<!-- 项目列表-结束 -->
-		<div class="page-wrapper">
+		<div class="page-wrapper" v-if="itemCount > pageSize">
 			<el-pagination background layout="total,prev, pager, next" :total="parseInt(itemCount)"
 				:page-size="pageSize" :current-page="currPage" @current-change="jumpPage($event)"></el-pagination>
 		</div>
@@ -69,7 +69,7 @@
 		data() {
 			return {
 				projectList: [],
-				pageSize: 5,
+				pageSize: 10,
 				currPage: 1,
 				itemCount: 0,
 				loading: true,
@@ -127,11 +127,12 @@
 				});
 			},
 			//获取项目列表
-			async getProjectList(curr, pageSize) {
+			async getProjectList(curr) {
 				this.loading = true;
                 const {data, http_status, msg} = await lists(this.listQuery);
                 this.projectList = data.data;
                 this.itemCount = Number(data.total);
+                this.pageSize = Number(data.per_page);
                 this.loading = false;
 			},
 			//创建项目
@@ -142,7 +143,7 @@
 							.then((res) => {
 								if (res.http_status === this.HTTP_SUCCESS) {
 									this.$message.success(res.msg);
-									this.getProjectList(this.currPage, this.pageSize);
+									this.getProjectList(this.currPage);
 									this.dialogFormVisible = false;
 									this.$refs.form.resetFields();
 								}
@@ -166,7 +167,7 @@
 								let response = res.data;
 								if (response.code === CODE_OK) {
 									this.$message.success("成功!" + response.msg);
-									this.getProjectList(this.currPage, this.pageSize);
+									this.getProjectList(this.currPage);
 								} else {
 									this.$message.error("失败!" + response.msg);
 								}
@@ -185,7 +186,7 @@
 									this.$message.success(res.msg);
 									this.dialogFormVisible = false;
 									this.$refs.updateData.resetFields();
-									this.getProjectList(this.currPage, this.pageSize);
+									this.getProjectList(this.currPage);
 								}
 								this.update = false;
 							})
@@ -197,14 +198,14 @@
 			},
 			jumpPage(page) {
 				this.currPage = page;
-				this.getProjectList(page, this.pageSize);
+				this.getProjectList(page);
 			},
 			detail(row) {
 				this.$router.push("/detail/" + row.project_id);
 			},
 		},
 		created() {
-			this.getProjectList(this.currPage, this.pageSize);
+			this.getProjectList(this.currPage);
 		},
 	};
 </script>

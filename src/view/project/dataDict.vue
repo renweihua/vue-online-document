@@ -269,9 +269,8 @@ export default {
       this.$http
         .get("/data-base/list", {
           params: {
-            ps: this.pageSize,
-            cp: this.currentPage,
-            projectId: this.projectId,
+            page: this.currentPage,
+            project_id: this.projectId,
           },
         })
         .then((res) => {
@@ -290,7 +289,7 @@ export default {
         .get("/data-base/schemas", {
           params: {
             id,
-            projectId: this.projectId,
+            project_id: this.projectId,
           },
         })
         .then((res) => {

@@ -84,7 +84,7 @@
 		},
 		data() {
 			return {
-				pageSize: 5,
+				pageSize: 10,
 				currPage: 1,
 				itemCount: 0,
 				propertyList: [],
@@ -174,6 +174,7 @@
 			async getFieldList(curr, pageSize) {
 				this.loading = true;
 				const {data, http_status, msg} = await lists({
+						page: curr,
 						project_id: this.$route.params.projectId,
 					});
                 this.itemCount = Number(data.total);

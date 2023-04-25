@@ -51,7 +51,7 @@
 			},
 		},
 		created() {
-			this.getDocList(this.ps, this.cp, this.groupId, this.$route.params.projectId);
+			this.getDocList(this.cp, this.groupId, this.$route.params.projectId);
 		},
 		data() {
 			return {
@@ -80,7 +80,6 @@
 									if (response.code === CODE_OK) {
 										this.$message.success("成功!");
 										this.getDocList(
-											this.ps,
 											this.cp,
 											this.groupId,
 											this.$route.params.projectId
@@ -99,7 +98,7 @@
 			//翻页
 			changePage(event) {
 				this.loading = true;
-				this.getDocList(this.ps, event, this.groupId, this.$route.params.projectId);
+				this.getDocList(event, this.groupId, this.$route.params.projectId);
 				this.cp = event;
 			},
 			//删除文档
@@ -124,7 +123,6 @@
 								}
 
 								this.getDocList(
-									this.ps,
 									this.cp,
 									this.groupId,
 									this.$route.params.projectId
@@ -136,7 +134,7 @@
 				});
 			},
 			//获取文档
-			async getDocList(size, curr, groupId, projectId, search = "") {
+			async getDocList(curr, groupId, projectId, search = "") {
 				if (!projectId) {
 					this.$message.error("异常错误");
 					return;
@@ -153,8 +151,7 @@
 				} = await lists({
 					group_id: groupId,
 					project_id: projectId,
-					ps: size,
-					cp: curr,
+					page: curr,
 					isDeleted: groupId < 0 ? 1 : 0,
 					search,
 				});
@@ -191,11 +188,11 @@
 			$route: function(to) {
 				if (to.query.search) {
 					this.cp = 1;
-					this.getDocList(this.ps, this.cp, 0, to.params.projectId, to.query.search);
+					this.getDocList(this.cp, 0, to.params.projectId, to.query.search);
 					this.loading = true;
 				} else {
 					this.cp = 1;
-					this.getDocList(this.ps, this.cp, to.query.groupId, to.params.projectId);
+					this.getDocList(this.cp, to.query.groupId, to.params.projectId);
 					this.loading = true;
 				}
 			},

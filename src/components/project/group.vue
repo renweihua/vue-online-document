@@ -111,7 +111,7 @@
 		},
 		created() {
 			if (this.group.length < 1) {
-				this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
+				this.getGroup(this.curr, this.$route.params.projectId);
 			}
 		},
 		data() {
@@ -137,11 +137,10 @@
 				}
 			},
 			//获取分组列表
-			async getGroup(pageSize, curr, projectId) {
+			async getGroup(curr, projectId) {
 				const {data, http_status, msg} = await lists({
-					cp: curr,
+					page: curr,
 					group_type: this.type,
-					ps: pageSize,
 					project_id: projectId ? projectId : 0,
 				});
 
@@ -179,7 +178,6 @@
 									this.$message.error("操作失败");
 								}
 								this.getGroup(
-									this.pageSize,
 									this.curr,
 									this.$route.params.projectId
 								);
