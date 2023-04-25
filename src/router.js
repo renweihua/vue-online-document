@@ -13,7 +13,8 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-	routes: [{
+	routes: [
+		{
 			path: "/register",
 			component: resolve => require(['@/view/auth/register'], resolve),
 			name: "register"
@@ -33,10 +34,16 @@ const router = new VueRouter({
 					component: resolve => require(['@/view/manage'], resolve),
 					name: "manage",
 					redirect: "projectList",
-					children: [{
+					children: [
+						{
 							path: "/projectList",
 							component: resolve => require(['@/view/project/projectList'], resolve),
 							name: "projectList"
+						},
+						{
+							path: "/public-projects",
+							component: resolve => require(['@/view/project/public-projects'], resolve),
+							name: "public-projects"
 						},
 						{
 							path: "/userManager",

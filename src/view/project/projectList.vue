@@ -12,13 +12,13 @@
 				<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 				<el-table-column prop label="操作">
 					<template slot-scope="scope">
-						<el-button type="text" slot="reference" @click.stop="deleteData(scope.row.project_id)"
-							:disabled="$store.state.userInfo.type == 1">删除</el-button>
+						<el-button type="info" @click.stop="detail(scope.row);">详情</el-button>
 						<el-divider direction="vertical"></el-divider>
-						<el-button type="text" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
+						<el-button type="primary" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
 							:disabled="$store.state.userInfo.type == 1">编辑</el-button>
 						<el-divider direction="vertical"></el-divider>
-						<el-button type="text" @click.stop="detail(scope.row);">详情</el-button>
+						<el-button type="danger" slot="reference" @click.stop="deleteData(scope.row.project_id)"
+							:disabled="$store.state.userInfo.type == 1">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
