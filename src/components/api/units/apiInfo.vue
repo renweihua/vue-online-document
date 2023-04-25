@@ -25,8 +25,7 @@
 					<el-col :span="5">
 						<el-form-item label="请求协议" prop="http_protocol" label-width="80px">
 							<el-select v-model="apiInfo.http_protocol" placeholder="选择请求协议" style="width: 90%">
-								<el-option v-if="propertyList && propertyList.http_protocol" v-for="item in propertyList.http_protocol" :key="item"
-									:label="item" :value="item"></el-option>
+								<el-option v-if="propertyList && propertyList.http_protocol" v-for="item in propertyList.http_protocol" :key="item" :label="item" :value="item"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -34,8 +33,14 @@
 					<el-col :span="5">
 						<el-form-item label="请求方式" prop="http_method" label-width="80px">
 							<el-select v-model="apiInfo.http_method" placeholder="选择请求方式" style="width: 90%">
-								<el-option v-if="propertyList && propertyList.http_method" v-for="item in propertyList.http_method" :key="item"
-									:label="item" :value="item"></el-option>
+								<el-option-group
+									v-if="propertyList && propertyList.http_method"
+					                v-for="(group, index) in propertyList.http_method"
+					                :key="index"
+					                :label="group.label"
+					            >
+	                            	<el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+	                            </el-option-group>
 							</el-select>
 						</el-form-item>
 					</el-col>
