@@ -48,5 +48,11 @@ yarn config get registry
 	- [X] 创建
 	- [X] 编辑
 	- [X] 删除
+- [ ] 项目成员
+    - [ ] 列表
+    - [ ] ~~详情~~
+    - [X] 创建
+    - [X] 编辑
+    - [ ] 删除
 - 操作日志
 	- [X] 列表 /api/operation-logs

@@ -4,7 +4,7 @@
 		<div class="user-search">
 			<el-select size="medium" v-model="keyword" filterable remote placeholder="输入 账户/手机号/邮箱 搜索会员"
 				:remote-method="getUserList" :loading="loading" @change="addProjectUser($event)" clearable>
-				<el-option v-for="item in searchUserList" :key="item.user_id" :label="item.user_id" :value="item">
+				<el-option v-for="item in searchUserList" :key="item.user_id" :label="item.user_info.nick_name ? item.user_info.nick_name : ('会员：' + item.user_id)" :value="item">
 					<span style="float: right">添加</span>
 					<span style="float: left; color: #8492a6; font-size: 13px">{{ item.user_info.nick_name ? item.user_info.nick_name : ('会员：' + item.user_id) }}</span>
 				</el-option>
@@ -49,6 +49,7 @@
 <script>
 	const CODE_OK = 200;
 	import { searchUsers } from '@/api/commom';
+	import { lists, create, update, deleteMember } from '@/api/project-member'
 
 	export default {
 		name: "members",
@@ -117,7 +118,6 @@
 						}
 					);
 			},
-
 			//增加项目用户
 			addProjectUser(val) {
 				this.$confirm(
@@ -129,19 +129,14 @@
 						}
 					)
 					.then(() => {
-						this.$http
-							.post("/project/add-user", {
-								user_id: val.id,
+						create({
 								project_id: this.$route.params.projectId,
+								user_id: val.user_id,
 							})
-							.then(
-								(response) => {
-									response = response.data;
-									if (response.code === CODE_OK) {
+							.then((res) => {
+									if (res.http_status === this.HTTP_SUCCESS) {
+										this.$message.success(res.msg);
 										this.getProjectUserList();
-										this.$message.success("操作成功");
-									} else {
-										this.$message.error(response.msg);
 									}
 								},
 								() => {
