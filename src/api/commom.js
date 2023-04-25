@@ -8,3 +8,13 @@ export async function properties(params) {
         params
     })
 }
+
+// 搜索会员
+export async function searchUsers(params) {
+    return await request({
+        url: `/search-users`,
+        method: 'get',
+        params
+    })
+}
+
