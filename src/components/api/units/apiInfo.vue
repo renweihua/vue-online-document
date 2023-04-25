@@ -12,16 +12,6 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-
-					<el-col :span="5">
-						<el-form-item label="二级分组(可选)" label-width="110px">
-							<el-select v-model="apiInfo.group_id_second" placeholder="子分组" style="width: 90%" clearable>
-								<el-option v-for="item in childGroup" :key="item.id" :label="item.title"
-									:value="item.id"></el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-
 					<el-col :span="5">
 						<el-form-item label="请求协议" prop="http_protocol" label-width="80px">
 							<el-select v-model="apiInfo.http_protocol" placeholder="选择请求协议" style="width: 90%">
@@ -108,27 +98,11 @@
 						}
 					);
 			},
-			updateChildGroup(val) {
-				for (const key in val) {
-					if (Object.hasOwnProperty.call(val, key)) {
-						const element = val[key];
-						if (element.id == this.apiData.group_id) {
-							this.childGroup = element.childs;
-							break;
-						}
-					}
-				}
-			},
 		},
 
 		data() {
 			return {
 				rules: {
-					group_id: [{
-						required: true,
-						message: "请选择分组",
-						trigger: "blur"
-					}],
 					http_protocol: [{
 						required: true,
 						message: "请选择协议类型",
@@ -156,8 +130,8 @@
 					}, ],
 				},
 				apiInfo: {
-					group_id: null, //分组
-					project_id: null, //项目Id
+					group_id: 0, //分组
+					project_id: 0, //项目Id
 					protocol_type: "", //协议
 					http_protocol: "", //http请求方法
 					http_return_type: "", //返回值类型
@@ -167,7 +141,6 @@
 					function_name: "", //程序内部方法名
 					develop_language: "", //接口开发语言
 					id: 0,
-					group_id_second: null,
 					realGroupId: null,
 				},
 				childGroup: [],
@@ -176,13 +149,6 @@
 		watch: {
 			apiData: function() {
 				this.apiInfo = this.apiData;
-				if (this.apiData.group_id_second == 0) {
-					this.apiInfo.group_id_second = null;
-				}
-
-				if (this.isUpdate && this.groupList.length > 0) {
-					this.updateChildGroup(this.groupList);
-				}
 			},
 			apiInfo: {
 				handler: function(newdata) {
@@ -205,12 +171,6 @@
 								break;
 						}
 					}
-				}
-			},
-			groupList: function(val) {
-				if (this.isUpdate && this.childGroup.length < 1) {
-					// childGroup  group_id_second
-					this.updateChildGroup(val);
 				}
 			},
 		},

@@ -154,6 +154,7 @@
 						return;
 					}
 					let result;
+					console.log(this.fieldMapping);
 					if(this.fieldMapping.id){
 						result = update(this.fieldMapping);
 					}else{

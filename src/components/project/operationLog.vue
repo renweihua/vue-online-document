@@ -32,10 +32,9 @@
 			//获取操作日志
 			async getOperationLog() {
 				const {data, http_status, msg} = await operationLogs({
-						project_id: this.$route.params.projectId,
-						type: "1,2,3,4",
-						page: this.page,
-					});
+					project_id: this.$route.params.projectId,
+					page: this.page,
+				});
                 this.operationLog = data.data;
                 this.loading = false;
 			},

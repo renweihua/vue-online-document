@@ -41,7 +41,7 @@
 		},
 		methods: {
 			updateInfo(val) {
-				this.title = val.title;
+				this.title = val.doc_name;
 				this.groupId = val.groupId || 0;
 			},
 			initDocCreate() {

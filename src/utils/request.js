@@ -126,7 +126,7 @@ service.interceptors.response.use(
 
                     break;
                 case 500: // 认证失败
-                    msg = error.response.statusText;
+                    msg = error.response.data.msg || error.response.statusText;
                     break;
             }
         }
