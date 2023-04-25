@@ -44,19 +44,29 @@
 			<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 			<el-table-column prop label="操作">
 				<template slot-scope="scope" v-show="!controlShow()">
-					<el-button slot="reference" type="text" @click="del(scope.row.id)">删除</el-button>
+					<el-button type="primary" @click="updateAction(scope.row) ">编辑</el-button>
 					<el-divider direction="vertical"></el-divider>
-					<el-button type="text" @click="updateAction(scope.row) ">编辑</el-button>
+					<el-button slot="reference" type="danger" @click="del(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 		<!-- 数据-结束 -->
+		<!-- 项目列表-结束 -->
+		<div class="page-wrapper" v-if="itemCount > pageSize">
+			<el-pagination background layout="total,prev, pager, next" :total="parseInt(itemCount)"
+				:page-size="pageSize" :current-page="currPage" @current-change="jumpPage($event)"></el-pagination>
+		</div>
 	</div>
 </template>
 
 <script>
 	import controlShow from "../../mixins/controlShow";
 	import getCommonProperty from "../../mixins/getCommonProperty";
+	import {
+		lists,
+		create,
+		update
+	} from '@/api/field-mapping';
 
 	const CODE_OK = 200;
 
@@ -73,11 +83,16 @@
 		},
 		data() {
 			return {
+				pageSize: 5,
+				currPage: 1,
+				itemCount: 0,
 				propertyList: [],
 				loadding: false,
 				showAddWindow: false,
 				fieldList: [],
-				fieldMapping: {},
+				fieldMapping: {
+					project_id: this.projectId,
+				},
 				rules: {
 					field_name: [{
 							required: true,
@@ -143,58 +158,38 @@
 				this.showAddWindow = true;
 			},
 			//保存字段
-			saveFieldMapping() {
-				let url = this.fieldMapping.id ?
-					"/field-mapping/update" :
-					"/field-mapping/create";
-
+			async saveFieldMapping() {
 				this.$refs.form.validate((valid) => {
 					if (!valid) {
 						return;
 					}
-
-					this.$http
-						.post(url, {
-							...this.fieldMapping,
-							project_id: this.projectId,
-						})
+					let result;
+					if(this.fieldMapping.id){
+						result = update(this.fieldMapping);
+					}else{
+						result = create(this.fieldMapping);
+					}
+					result
 						.then((res) => {
-							let response = res.data;
-							if (response.code === CODE_OK) {
-								this.$message.success("操作成功!");
-								this.getFieldList();
+							if (res.http_status === CODE_OK) {
+								this.$message.success(res.msg);
 								this.showAddWindow = false;
-								this.$refs.form.resetFields();
-							} else {
 								this.getFieldList();
-								this.$message.error("操作失败!");
-								this.actionCancel();
+								this.$refs.form.resetFields();
 							}
 						});
 				});
 			},
 			//获取字段列表
-			getFieldList() {
+			async getFieldList(curr, pageSize) {
 				this.loading = true;
-				this.$http
-					.get("/field-mapping/list", {
-						params: {
-							projectId: this.$route.params.projectId,
-						},
-					})
-					.then(
-						(response) => {
-							response = response.data;
-							if (response.code === CODE_OK) {
-								this.fieldList = response.data;
-							}
-
-							this.loading = false;
-						},
-						() => {
-							this.$message.error("获取数据-操作失败!");
-						}
-					);
+				const {data, http_status, msg} = await lists({
+						project_id: this.$route.params.projectId,
+					});
+                this.itemCount = Number(data.total);
+                this.pageSize = Number(data.per_page);
+				this.fieldList = data.data;
+				this.loading = false;
 			},
 		},
 	};
