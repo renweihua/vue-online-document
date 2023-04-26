@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <div class="top-bar-container">
-      <div class="top-bar-title">{{projectName ? projectName : 'apiDoc'}}</div>
+      <div class="top-bar-title">{{projectName ? projectName : '小丑路人·在线文档'}}</div>
       <a
         href="javascript:void(0);"
         @click="$router.push('/')"
@@ -34,14 +34,15 @@ export default {
   props: {},
   computed: {
     nickName: function () {
-      return this.$store.state.userInfo.nick_name;
+      let user = this.$store.state.userInfo;
+      return user && user.user_info ? user.user_info.nick_name : '会员';
     },
     avatarUrl: function () {
       return this.BASE_URL + "/" + this.$store.state.userInfo.user_face;
     },
     showInfo: function () {
-      let userInfo = this.$store.state.userInfo;
-      if (userInfo && userInfo.id > 0 && this.$route.name != "userLogin") {
+      let user = this.$store.state.userInfo;
+      if (user && user.user_id > 0 && this.$route.name != "userLogin") {
         return true;
       }
 
@@ -50,9 +51,9 @@ export default {
     projectName: function () {
       if (
         this.$route.params.projectId &&
-        this.$route.params.projectId == this.$store.state.project.id
+        this.$route.params.projectId == this.$store.state.project.project_id
       ) {
-        return this.$store.state.project.title;
+        return this.$store.state.project.project_name;
       }
 
       return "";
@@ -60,7 +61,7 @@ export default {
     showHomeBtn: function () {
       if (
         this.$route.params.projectId &&
-        this.$route.params.projectId == this.$store.state.project.id
+        this.$route.params.projectId == this.$store.state.project.project_id
       ) {
         return true;
       }
@@ -84,7 +85,6 @@ export default {
         this.loginOut();
         return;
       }
-
       if (command == "myCenter") {
         this.goToUserCenter();
         return;
