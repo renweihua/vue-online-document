@@ -155,29 +155,21 @@
 			},
 			//移除出项目
 			quitProject(val) {
-				this.$confirm("将" + val.nick_name + "移出该项目, 是否继续?", "提示", {
+				this.$confirm("确定要将会员`" + val.user_info.nick_name + "`移出该项目?", "提示", {
 						confirmButtonText: "确定",
 						cancelButtonText: "取消",
 						type: "warning",
 					})
 					.then(() => {
-						this.$http
-							.post("/project/quit-project", {
-								userId: val.id,
-								projectId: this.$route.params.projectId,
+						deleteMember({
+								user_id: val.user_id,
+								project_id: this.$route.params.projectId,
 							})
-							.then(
-								(response) => {
-									response = response.data;
-									if (response.code === CODE_OK) {
+							.then((res) => {
+									if (res.http_status === this.HTTP_SUCCESS) {
+										this.$message.success(res.msg);
 										this.getProjectUserList();
-										this.$message.success("成功!");
-									} else {
-										this.$message.faild(response.msg);
 									}
-								},
-								() => {
-									this.$message.error("操作失败!");
 								}
 							);
 					})
