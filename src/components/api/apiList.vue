@@ -47,8 +47,7 @@
 
 <script>
 	import controlShow from "../../mixins/controlShow";
-    import { lists } from "@/api/api"
-	const CODE_OK = 200;
+    import { lists, deleteApi } from "@/api/api";
 
 	export default {
 		name: "apiList",
@@ -84,7 +83,7 @@
 							})
 							.then((response) => {
 								response = response.data;
-								if (response.code === CODE_OK) {
+								if (response.code === this.HTTP_STATUS) {
 									this.$message.success("成功!");
 									this.$router.push({
 										name: "apiList",
@@ -132,27 +131,18 @@
 				);
 				this.cp = event;
 			},
-			delApi(id) {
+			delApi(api_id) {
 				this.loading = true;
-				this.$http
-					.post("/api/del", {
-						id: id,
-					})
-					.then((response) => {
-						response = response.data;
-						if (response.code === CODE_OK) {
-							this.$message.success("操作成功");
+				deleteApi({api_id})
+					.then((res) => {
+						if (res.http_status === this.HTTP_SUCCESS) {
+							this.$message.success(res.msg);
 							this.$router.push({
 								name: "apiList",
 								params: {
-									groupId: this.$route.query.groupId
-								},
-								query: {
-									random: Math.random()
+									group_id: this.$route.query.groupId
 								},
 							});
-						} else {
-							this.$message.error("失败:" + response.msg);
 						}
 					})
 					.catch(() => {

@@ -34,7 +34,7 @@ export async function update(data) {
     })
 }
 
-export async function deleteDoc(data) {
+export async function deleteApi(data) {
     return await request({
         url: `/api-delete`,
         method: 'delete',
