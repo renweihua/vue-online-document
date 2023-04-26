@@ -46,7 +46,7 @@
 <script>
 	const CODE_OK = 200;
 	import { searchUsers } from '@/api/commom';
-	import { lists, create, update, deleteMember } from '@/api/project-member'
+	import { lists, create, update, deleteMember, setRolePower } from '@/api/project-member'
 
 	export default {
 		name: "members",
@@ -129,32 +129,25 @@
 			},
 			//设置用户对项目的读写权限
 			setPermission(val) {
-				let userPermission = val.permission == 4 ? 6 : 4;
-				userPermission = Number.parseInt(userPermission);
-				this.$confirm("将用户" + val.nick_name + "修改权限, 是否继续?", "提示", {
+				let role_power = val.role_power == 0 ? 1 : 0;
+				role_power = Number.parseInt(role_power);
+				this.$confirm("您将调整会员`" + val.user_info.nick_name + "`的权限?", "提示", {
 						confirmButtonText: "确定",
 						cancelButtonText: "取消",
 						type: "warning",
 					})
 					.then(() => {
-						this.$http
-							.post("/project/set-permission", {
-								userId: val.id,
-								permission: userPermission,
-								projectId: this.$route.params.projectId,
+						setRolePower({
+								project_id: this.$route.params.projectId,
+								user_id: val.user_id,
+								role_power: role_power,
 							})
 							.then(
-								(response) => {
-									response = response.data;
-									if (response.code === CODE_OK) {
+								(res) => {
+									if (res.http_status === this.HTTP_SUCCESS) {
+										this.$message.success(res.msg);
 										this.getProjectUserList();
-										this.$message.success("操作成功!");
-									} else {
-										this.$message.error("操作失败!");
 									}
-								},
-								() => {
-									this.$message.error("操作失败!");
 								}
 							);
 					})

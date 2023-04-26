@@ -41,3 +41,12 @@ export async function deleteMember(data) {
         data
     })
 }
+
+export async function setRolePower(data) {
+    return await request({
+        url: `/project-member/set-role-power`,
+        method: 'patch',
+        data
+    })
+}
+
