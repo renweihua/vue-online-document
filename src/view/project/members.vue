@@ -119,9 +119,6 @@
 										this.$message.success(res.msg);
 										this.getProjectUserList();
 									}
-								},
-								() => {
-									this.$message.error("操作失败!");
 								}
 							);
 					})

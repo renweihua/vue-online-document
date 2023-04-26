@@ -110,23 +110,21 @@ service.interceptors.response.use(
         }
     },
     error => {
-        console.log('err' + error); // for debug
+        // console.log('err' + error); // for debug
         let msg = error.msg;
         if (error.response == undefined){
             msg = '超时 ' + timeout + ' ms，请刷新！';
         }else{
+            msg = error.response.data.msg || error.response.statusText;
             switch (error.response.status) {
+                case 500:
                 case 404:
-                    msg = error.response.statusText;
+                case 400:
                     break;
                 case 401: // 认证失败
                     msg = error.response.data.msg;
                     localStorage.removeItem("userInfo");
                     router.push("/login");
-
-                    break;
-                case 500: // 认证失败
-                    msg = error.response.data.msg || error.response.statusText;
                     break;
             }
         }
