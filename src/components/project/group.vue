@@ -1,7 +1,7 @@
 <template>
 	<div class="group">
 		<!-- 分组操作-start -->
-		<ul v-show="group" class="operator">
+		<ul v-show="groups" class="operator">
 			<li>
 				<a href="javascript:;" @click="clientBtn(null,null)">
 					<i class="el-icon-s-order"></i>
@@ -23,7 +23,7 @@
 
 		<!-- 分组列表-start -->
 		<div class="list">
-			<div v-for="(item,index) in group" :key="item.id" class="list-item">
+			<div v-for="(item,index) in groups" :key="item.id" class="list-item">
 				<div class="list-item-one">
 					<div>
 						<i :class=" item.isClickShowChild ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"
@@ -32,7 +32,7 @@
 					</div>
 					<div class="sort">
 						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index > 0">↑</a>
-						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index + 1 < group.length">↓</a>
+						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index + 1 < groups.length">↓</a>
 					</div>
 					<el-dropdown placement="left-start" @command="handleCommand" trigger="click" v-show="controlShow()">
 						<span class="el-icon-s-unfold"></span>
@@ -64,12 +64,56 @@
 		</div>
 		<!-- 分组列表-end -->
 
+		<!-- Tree -->
+		<el-input
+		  placeholder="输入关键字进行过滤"
+		  v-model="filterText">
+		</el-input>
+		<el-tree
+			:filter-node-method="filterNode"
+			ref="tree"
+			:props="defaultProps"
+			class="filter-tree"
+			:data="groups"
+			node-key="group_id"
+			default-expand-all="true"
+			@node-drag-start="handleDragStart"
+			@node-drag-enter="handleDragEnter"
+			@node-drag-leave="handleDragLeave"
+			@node-drag-over="handleDragOver"
+			@node-drag-end="handleDragEnd"
+			@node-drop="handleDrop"
+			draggable="true"
+			:allow-drop="allowDrop"
+			:allow-drag="allowDrag"
+			highlight-current="true"
+			icon-class="el-icon-s-operation"
+			>
+			<span class="custom-tree-node" slot-scope="{ node, data }">
+	        <span>{{ node.label }}</span>
+	        <span>
+	          <el-button
+	            type="text"
+	            size="mini"
+	            @click="() => append(data)">
+	            编辑
+	          </el-button>
+	          <el-button
+	            type="text"
+	            size="mini"
+	            @click="() => remove(node, data)">
+	            Delete
+	          </el-button>
+	        </span>
+	      </span>
+		</el-tree>
+
 		<!-- 新增分组-start -->
 		<el-dialog title="新增分组" :visible.sync="dialogFormVisible" width="40%">
 			<el-form :model="form" ref="form">
 				<el-form-item label="上级" :label-width="formLabelWidth">
 					<el-select v-model="form.parent_id" placeholder="请选择上级" :disabled="isFirstUpdate" clearable>
-						<el-option v-for="item in group" :key="item.id" :label="item.group_name" :value="item.id">
+						<el-option v-for="item in groups" :key="item.id" :label="item.group_name" :value="item.id">
 						</el-option>
 					</el-select>
 				</el-form-item>
@@ -110,13 +154,13 @@
 			},
 		},
 		created() {
-			if (this.group.length < 1) {
+			if (this.groups.length < 1) {
 				this.getGroup(this.curr, this.$route.params.projectId);
 			}
 		},
 		data() {
 			return {
-				group: [],
+				groups: [],
 				curr: 1,
 				pageSize: 100,
 				dialogFormVisible: false,
@@ -126,9 +170,22 @@
 					group_name: "",
 				},
 				updateId: 0,
+
+
+// 树形控件
+        filterText: '',
+		
+		        defaultProps: {
+		          children: '_child',
+		          label: 'group_name'
+		        },
 			};
 		},
 		methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      },
 			handleCommand(command) {
 				if (command.action === "del") {
 					this.delete(command.data.id);
@@ -151,7 +208,7 @@
 						data[key]["childs"][childKey].isClick = false;
 					}
 				}
-				this.group = data;
+				this.groups = data;
 			},
 			//删除分组
 			delete(id) {
@@ -190,7 +247,7 @@
 			//点击折叠按钮
 			clickFoldBtn(index) {
 				if (index !== null) {
-					this.group[index].isClickShowChild = this.group[index].isClickShowChild ?
+					this.groups[index].isClickShowChild = this.groups[index].isClickShowChild ?
 						false :
 						true;
 				}
@@ -198,12 +255,12 @@
 			//点击分组
 			clientBtn(group, index, isChild = false) {
 				if (!isChild) {
-					for (const key in this.group) {
-						this.group[key].isClick = false;
+					for (const key in this.groups) {
+						this.groups[key].isClick = false;
 					}
 					if (index !== null) {
-						this.group[index].isClick = true;
-						this.group[index].isClickShowChild = true;
+						this.groups[index].isClick = true;
+						this.groups[index].isClickShowChild = true;
 					}
 				}
 
@@ -297,6 +354,9 @@
 					this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
 				}
 			},
+		      filterText(val) {
+		        this.$refs.tree.filter(val);
+		      }
 		},
 		components: {},
 		mixins: [controlShow],
@@ -413,5 +473,13 @@
 				}
 			}
 		}
+	}
+	.custom-tree-node {
+	    flex: 1;
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    font-size: 14px;
+	    padding-right: 8px;
 	}
 </style>

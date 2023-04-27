@@ -113,8 +113,8 @@
 				</tr>
 				<tbody v-if=" apiData.response_params && apiData.response_params[0]">
 					<tr v-for="(item,index) in apiData.response_params" :key="index">
-						<td>{{item.fieldName}}</td>
-						<td>{{item.objectName}}</td>
+						<td>{{item.field_name}}</td>
+						<td>{{item.object_name}}</td>
 						<td>{{item.description}}</td>
 						<td>{{item.required}}</td>
 						<td>{{item.type}}</td>

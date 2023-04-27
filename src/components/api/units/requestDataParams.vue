@@ -15,7 +15,7 @@
 				<tr v-for="(item,index) in apiParamHeaderItem" :key="item.id">
 					<td>
 						<input type="text" placeholder="参数名" v-model="item.name"
-							v-on:input="apiParamHeaderInput(index,$event)" class="content" />
+							v-on:input="apiParamHeaderInput(index, $event)" class="content" />
 					</td>
 					<td>
 						<input class="content" type="text" placeholder="值" v-model="item.content" />
@@ -84,7 +84,7 @@
 						name: "",
 						content: "",
 						handle: true,
-						isAdd: false,
+						is_add: false,
 					}, ];
 				},
 			},
@@ -98,7 +98,7 @@
 						type: "string",
 						example: "",
 						handle: true,
-						isAdd: false,
+						is_add: false,
 					}, ];
 				},
 			},
@@ -113,7 +113,7 @@
 					name: "",
 					content: "",
 					handle: true,
-					isAdd: false,
+					is_add: false,
 				}, ],
 				apiParamItem: [{
 					name: "",
@@ -122,7 +122,7 @@
 					type: "string",
 					example: "",
 					handle: true,
-					isAdd: false,
+					is_add: false,
 				}, ],
 			};
 		},
@@ -134,7 +134,7 @@
 						name: "",
 						content: "",
 						handle: true,
-						isAdd: false,
+						is_add: false,
 					});
 				}
 			},
@@ -148,7 +148,7 @@
 						type: "string",
 						example: "",
 						handle: true,
-						isAdd: false,
+						is_add: false,
 					});
 				}
 			},
@@ -164,7 +164,7 @@
 			apiParamInput(index, event) {
 				let txt = event.target.value;
 				if (event) {
-					if (txt.length >= 1 && this.apiParamItem[index].isAdd === false) {
+					if (txt.length >= 1 && this.apiParamItem[index].is_add === false) {
 						this.apiParamItem.push({
 							name: "",
 							desc: "",
@@ -172,9 +172,9 @@
 							type: "string",
 							example: "",
 							handle: true,
-							isAdd: false,
+							is_add: false,
 						});
-						this.apiParamItem[index].isAdd = true;
+						this.apiParamItem[index].is_add = true;
 					}
 				}
 			},
@@ -183,14 +183,14 @@
 				if (event) {
 					let txt = event.target.value;
 
-					if (txt.length >= 1 && this.apiParamHeaderItem[index].isAdd === false) {
+					if (txt.length >= 1 && this.apiParamHeaderItem[index].is_add === false) {
 						this.apiParamHeaderItem.push({
 							name: "",
 							content: "",
 							handle: true,
-							isAdd: false,
+							is_add: false,
 						});
-						this.apiParamHeaderItem[index].isAdd = true;
+						this.apiParamHeaderItem[index].is_add = true;
 					}
 				}
 			},

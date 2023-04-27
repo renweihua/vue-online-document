@@ -25,11 +25,11 @@
 				</tr>
 				<tr v-for="(item,index) in returnDataItem" :key="item.id">
 					<td>
-						<input type="text" placeholder="字段名" v-model="item.fieldName"
+						<input type="text" placeholder="字段名" v-model="item.field_name"
 							v-on:input="dataInput(index,$event)" />
 					</td>
 					<td>
-						<input type="text" placeholder v-model="item.objectName" />
+						<input type="text" placeholder v-model="item.object_name" />
 					</td>
 					<td>
 						<input type="text" placeholder="参数名" v-model="item.description" />
@@ -47,7 +47,7 @@
 						</el-select>
 					</td>
 					<td>
-						<div v-show="item.fieldName.length >= 1">
+						<div v-show="item.field_name.length >= 1">
 							<el-button size="mini" icon="el-icon-delete" @click="dataDelete(index)"></el-button>
 						</div>
 					</td>
@@ -68,13 +68,13 @@
 			return {
 				dialogFormVisible: false,
 				returnDataItem: [{
-					fieldName: "",
-					objectName: "",
+					field_name: "",
+					object_name: "",
 					description: "",
 					required: false,
 					type: "string",
 					handle: true,
-					isAdd: false,
+					is_add: false,
 				}, ],
 				jsonData: "",
 			};
@@ -105,24 +105,24 @@
 				this.returnDataItem = [];
 				for (let item of items) {
 					this.returnDataItem.push({
-						fieldName: item,
-						objectName: "",
+						field_name: item,
+						object_name: "",
 						description: "",
 						required: true,
 						type: "string",
 						handle: true,
-						isAdd: false,
+						is_add: false,
 					});
 				}
 
 				this.returnDataItem.push({
-					fieldName: "",
-					objectName: "",
+					field_name: "",
+					object_name: "",
 					description: "",
 					required: true,
 					type: "string",
 					handle: true,
-					isAdd: false,
+					is_add: false,
 				});
 			},
 			//json解析方法
@@ -152,17 +152,17 @@
 			dataInput(index, event) {
 				if (event) {
 					let txt = event.target.value;
-					if (txt.length >= 1 && this.returnDataItem[index].isAdd === false) {
+					if (txt.length >= 1 && this.returnDataItem[index].is_add === false) {
 						this.returnDataItem.push({
-							fieldName: "",
-							objectName: "",
+							field_name: "",
+							object_name: "",
 							description: "",
 							required: false,
 							type: "string",
 							handle: true,
-							isAdd: false,
+							is_add: false,
 						});
-						this.returnDataItem[index].isAdd = true;
+						this.returnDataItem[index].is_add = true;
 					}
 				}
 			},
