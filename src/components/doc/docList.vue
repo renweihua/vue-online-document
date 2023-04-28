@@ -17,9 +17,7 @@
 					<template slot-scope="scope">
 						<el-button @click="jumpPage('docDetail',scope.row.doc_id)">详情</el-button>
 						<el-button @click="jumpPage('docEdit',scope.row.doc_id)" :disabled="!controlShow()">编辑</el-button>
-						<el-button v-if="$route.params.groupId == -1" type="danger" @click="restoreDoc(scope.row.doc_id)"
-							:disabled="!controlShow()">还原</el-button>
-						<el-button v-else type="danger" @click="deleteDoc(scope.row.doc_id)" :disabled="!controlShow()">删除
+						<el-button type="danger" @click="deleteDoc(scope.row.doc_id)" :disabled="!controlShow()">删除
 						</el-button>
 					</template>
 				</el-table-column>
@@ -66,41 +64,6 @@
 			};
 		},
 		methods: {
-			showIsTop(item){
-return false;
-			},
-			restoreDoc(id) {
-				this.$confirm("该文档将被还原, 是否继续?", "提示", {
-						confirmButtonText: "确定",
-						cancelButtonText: "取消",
-						type: "warning",
-					})
-					.then(() => {
-						this.$http
-							.post("/doc/restore", {
-								id: id,
-							})
-							.then(
-								(response) => {
-									response = response.data;
-									if (response.code === CODE_OK) {
-										this.$message.success("成功!");
-										this.getDocList(
-											this.cp,
-											this.groupId,
-											this.$route.params.projectId
-										);
-									} else {
-										this.$message.error("操作失败!");
-									}
-								},
-								() => {
-									this.$message.error("操作失败!");
-								}
-							);
-					})
-					.catch(() => {});
-			},
 			//翻页
 			changePage(event) {
 				this.loading = true;

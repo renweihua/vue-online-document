@@ -13,7 +13,7 @@
 					<i class="el-icon-delete"></i> 新增分组
 				</a>
 			</li>
-			<li class="last-item">
+			<li class="last-item" v-if="false">
 				<a href="javascript:;" @click="clientBtn(-1,null)">
 					<i class="el-icon-delete"></i> 回 收 站
 				</a>
