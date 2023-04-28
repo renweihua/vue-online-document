@@ -95,10 +95,6 @@
 						let detail = JSON.stringify(this.apiData);
 						detail = JSON.parse(detail);
 
-						if (detail.group_id_second) {
-							detail.group_id = detail.group_id_second;
-						}
-
 						update(detail)
 							.then((res) => {
                                 console.log(res);

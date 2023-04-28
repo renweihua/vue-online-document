@@ -21,7 +21,8 @@
 									label: 'group_name',
 								}"
 							    clearable
-							    filterable>
+							    filterable
+					    		@change="selectGroupHandleChange">
 							</el-cascader>
 						</el-form-item>
 					</el-col>
@@ -79,6 +80,11 @@
 			},
 		},
 		methods: {
+			// 选择父级分组
+			selectGroupHandleChange(item){
+				this.apiData.group_id = item[item.length - 1] || 0;
+				console.log(this.apiData.group_id);
+			},
 		},
 		data() {
 			return {
@@ -117,11 +123,10 @@
 					http_return_type: "", //返回值类型
 					url: "", //http请求URL
 					api_name: "", //接口名称
-					object_name: "", //对象名
-					function_name: "", //程序内部方法名
-					develop_language: "", //接口开发语言
+					object_name: "", // 对象名
+					function_name: "", // 程序内部方法名
+					develop_language: "", // 接口开发语言
 					id: 0,
-					realGroupId: null,
 				},
 				childGroup: [],
 			};

@@ -82,9 +82,6 @@
 						data = Object.assign(data, this.apiData);
 						console.log(data);
 						console.log(JSON.stringify(data));
-                        if (detail.group_id_second) {
-                            detail.group_id = detail.group_id_second;
-                        }
                         // 设置项目Id
                         data.project_id = this.$route.params.projectId;
 

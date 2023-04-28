@@ -82,7 +82,6 @@
 			},
 			doc: function(val) {
 				this.content.groupId = val.group_id;
-				this.content.groupIdSecond = val.group_id_second;
 				this.content.doc_name = val.doc_name;
 				this.updateChilds();
 			},
