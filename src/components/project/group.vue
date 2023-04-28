@@ -60,12 +60,12 @@
 						<span class="el-icon-s-unfold"></span>
 					</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item icon="el-icon-open" :command="{action:'sort',data:node}">默认打开子节点</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-turn-off" :command="{action:'sort',data:node}">默认关闭子节点</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',data:node}">上移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',data:node}">下移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',data:node}">编辑</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'del',data:node}">删除</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-open" :command="{action:'sort',item:data}">默认打开子节点</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-turn-off" :command="{action:'sort',item:data}">默认关闭子节点</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',item:data}">上移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data}">下移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data}">编辑</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'del',item:data}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</span>
@@ -124,7 +124,8 @@
 	import controlShow from "../../mixins/controlShow";
 	import {
 		lists,
-		create
+		create,
+		update
 	} from "@/api/group";
 
 	const CODE_OK = 200;
@@ -168,7 +169,6 @@
 				curr: 1,
 				pageSize: 100,
 				dialogFormVisible: false,
-				isFirstUpdate: false,
 				updateId: 0,
 
 
@@ -256,35 +256,35 @@
 				this.$emit("change-group", group ? group.group_id : 0);
 			},
 			//更新数据
-			updateGroup() {
-				if (this.updateId <= 0) {
+			async updateGroup() {
+				if (this.form.group_name.length < 1) {
+					this.$message.error("分组名称不能为空");
 					return;
 				}
-				this.$http
-					.post("/group/update", this.form)
-					.then(
-						(response) => {
-							response = response.data;
-							if (response.code === CODE_OK) {
-								this.$message.success("更新成功!");
-							} else {
-								this.$message.error(response.msg);
-							}
+				const {
+					data,
+					http_status,
+					msg
+				} = await update(this.form);
 
-							this.getGroup(
-								this.pageSize,
-								this.curr,
-								this.$route.params.projectId
-							);
-							this.dialogFormVisible = false;
+				if (http_status === this.HTTP_SUCCESS) {
+					this.$message.success(msg);
 
-							this.updateId = 0;
-							this.form.group_name = "";
-							this.form.parent_id = 0;
-							this.form.default_expand = 0;
-							this.isFirstUpdate = false;
-						}
+					this.updateId = 0;
+					this.form.group_name = "";
+					this.form.parent_id = 0;
+					this.form.default_expand = 0;
+
+					// 关闭弹出层
+					this.dialogFormVisible = false;
+
+					// 重新加载分组
+					this.getGroup(
+						this.pageSize,
+						this.curr,
+						this.$route.params.projectId
 					);
+				}
 			},
 			async createGroup() {
 				if (this.form.group_name.length < 1) {
@@ -320,17 +320,14 @@
 				if (command.action === "del") {
 					this.delete(command.data.id);
 				} else if (command.action === "edit") {
-					this.showUpdateDiglog(command.data, command.parent);
+					this.showUpdateDiglog(command.item);
 				}
 			},
-			showUpdateDiglog(data, parent = null) {
-				this.isFirstUpdate = true;
-				this.form.group_name = data.group_name;
-				if (parent) {
-					this.form.parent_id = parent.id;
-					this.isFirstUpdate = false;
-				}
-				this.updateId = data.id;
+			showUpdateDiglog(item) {
+				console.log(item);
+				this.form = item;
+				// this.form.group_name = item.group_name;
+				this.updateId = item.group_id;
 				this.dialogFormVisible = true;
 			},
 			/**
