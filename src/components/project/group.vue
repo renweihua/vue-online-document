@@ -78,7 +78,7 @@
 				<el-form-item label="上级" :label-width="formLabelWidth">
 					<el-cascader
 					    v-model="form.parent_id"
-					    :options="groups"
+					    :options="selectGroups"
 					    :props="{
 							children: '_child',
 							label: 'group_name',
@@ -111,7 +111,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click=" updateId > 0 ? updateGroup() : createGroup()">确 定</el-button>
+					<el-button type="primary" @click="form && form.group_id > 0 ? updateGroup() : createGroup()">确 定</el-button>
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
 				</el-form-item>
 			</el-form>
@@ -155,10 +155,13 @@
 			return {
 				// 分组列表
 				groups: [],
+				// 下拉选择的分组列表：编辑分组时，需要设置自己为`禁用不可选项`
+				selectGroups: [],
 				// 默认展示子节点的分组Id
 				defaultExpandByGroups: [],
 				// 表单数据
 				form: {
+					group_id: 0,
 					group_type: this.type,
 					project_id: this.$route.params.projectId,
 					parent_id: 0,
@@ -169,7 +172,6 @@
 				curr: 1,
 				pageSize: 100,
 				dialogFormVisible: false,
-				updateId: 0,
 
 
 				// 树形控件
@@ -270,7 +272,6 @@
 				if (http_status === this.HTTP_SUCCESS) {
 					this.$message.success(msg);
 
-					this.updateId = 0;
 					this.form.group_name = "";
 					this.form.parent_id = 0;
 					this.form.default_expand = 0;
@@ -313,8 +314,6 @@
 
 				this.dialogFormVisible = false;
 			},
-
-
 			// `分组`的点击事件
 			handleCommand(command) {
 				if (command.action === "del") {
@@ -324,11 +323,22 @@
 				}
 			},
 			showUpdateDiglog(item) {
-				console.log(item);
 				this.form = item;
-				// this.form.group_name = item.group_name;
-				this.updateId = item.group_id;
 				this.dialogFormVisible = true;
+				// 设置下拉框的分组数据
+				this.selectGroups = this.setGroupDisabledBySelf(this.groups);
+			},
+			// 获取默认展示子节点的分组Ids
+			setGroupDisabledBySelf(groups){
+				groups.map((item)=>{
+					if(item.group_id == this.form.group_id){
+						item.disabled = true;
+					}
+					if(item._child !== undefined){
+						item._child = this.setGroupDisabledBySelf(item._child);
+					}
+				});
+				return groups;
 			},
 			/**
 			 * Tree控件相关的函数
