@@ -21,91 +21,28 @@
 		</ul>
 		<!-- 分组操作-end -->
 
-		<!-- 分组列表-start -->
-		<div class="list">
-			<div v-for="(item,index) in groups" :key="item.id" class="list-item">
-				<div class="list-item-one">
-					<div>
-						<i :class=" item.isClickShowChild ? 'el-icon-arrow-down' : 'el-icon-arrow-right'"
-							@click="clickFoldBtn(index)" v-show="item.childs && item.childs.length > 0"></i>
-						<a href="javascript:;" @click="clientBtn(item, index)">{{item.group_name}}</a>
-					</div>
-					<div class="sort">
-						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index > 0">↑</a>
-						<a href="javascript:;" @click="sortGrpup(item, index)" v-if="index + 1 < groups.length">↓</a>
-					</div>
-					<el-dropdown placement="left-start" @command="handleCommand" trigger="click" v-show="controlShow()">
-						<span class="el-icon-s-unfold"></span>
-						<el-dropdown-menu slot="dropdown">
-							<el-dropdown-item :command="{action:'del',data:item}">删除</el-dropdown-item>
-							<el-dropdown-item :command="{action:'edit',data:item}">编辑</el-dropdown-item>
-						</el-dropdown-menu>
-					</el-dropdown>
-				</div>
-
-				<!-- 子分组-start -->
-				<ul v-show="item.childs && item.isClickShowChild === true">
-					<li v-for="(child,index) in item.childs" :key="child.id">
-						<a href="javascript:;" @click="clientBtn(child,index,true)">{{child.group_name}}</a>
-
-						<el-dropdown placement="left-start" @command="handleCommand" trigger="click"
-							v-show="controlShow()">
-							<span class="el-icon-s-unfold"></span>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item :command="{action:'del',data:child,parent:item}">删除</el-dropdown-item>
-								<el-dropdown-item :command="{action:'edit',data:child,parent:item}">编辑
-								</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-					</li>
-				</ul>
-				<!-- 子分组-end -->
-			</div>
-		</div>
-		<!-- 分组列表-end -->
-
 		<!-- Tree -->
-		<el-input
-		  placeholder="输入关键字进行过滤"
-		  v-model="filterText">
+		<el-input placeholder="输入关键字进行过滤" v-model="filterText">
 		</el-input>
-		<el-tree
-			:filter-node-method="filterNode"
-			ref="tree"
-			:props="defaultProps"
-			class="filter-tree"
-			:data="groups"
-			node-key="group_id"
-			default-expand-all="true"
-			@node-drag-start="handleDragStart"
-			@node-drag-enter="handleDragEnter"
-			@node-drag-leave="handleDragLeave"
-			@node-drag-over="handleDragOver"
-			@node-drag-end="handleDragEnd"
-			@node-drop="handleDrop"
-			draggable="true"
-			:allow-drop="allowDrop"
-			:allow-drag="allowDrag"
-			highlight-current="true"
-			icon-class="el-icon-s-operation"
-			>
+		<el-tree :filter-node-method="filterNode" ref="tree" :props="defaultProps" class="filter-tree" :data="groups"
+			node-key="group_id" default-expand-all="true" @node-drag-start="handleDragStart"
+			@node-drag-enter="handleDragEnter" @node-drag-leave="handleDragLeave" @node-drag-over="handleDragOver"
+			@node-drag-end="handleDragEnd" @node-drop="handleDrop" draggable="true" :allow-drop="allowDrop"
+			:allow-drag="allowDrag" highlight-current="true" icon-class="el-icon-s-operation">
 			<span class="custom-tree-node" slot-scope="{ node, data }">
-	        <span>{{ node.label }}</span>
-	        <span>
-	          <el-button
-	            type="text"
-	            size="mini"
-	            @click="() => append(data)">
-	            编辑
-	          </el-button>
-	          <el-button
-	            type="text"
-	            size="mini"
-	            @click="() => remove(node, data)">
-	            Delete
-	          </el-button>
-	        </span>
-	      </span>
+				<span>{{ node.label }}</span>
+				<el-dropdown trigger="click" @command="handleCommand">
+					<span class="el-dropdown-link">
+						<span class="el-icon-s-unfold"></span>
+					</span>
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:child,parent:item}">上移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:child,parent:item}">下移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'edit',data:child,parent:item}">编辑</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'del',data:child,parent:item}">删除</el-dropdown-item>
+					</el-dropdown-menu>
+				</el-dropdown>
+			</span>
 		</el-tree>
 
 		<!-- 新增分组-start -->
@@ -133,7 +70,10 @@
 
 <script>
 	import controlShow from "../../mixins/controlShow";
-	import { lists, create } from "@/api/group";
+	import {
+		lists,
+		create
+	} from "@/api/group";
 
 	const CODE_OK = 200;
 	export default {
@@ -172,20 +112,20 @@
 				updateId: 0,
 
 
-// 树形控件
-        filterText: '',
-		
-		        defaultProps: {
-		          children: '_child',
-		          label: 'group_name'
-		        },
+				// 树形控件
+				filterText: '',
+
+				defaultProps: {
+					children: '_child',
+					label: 'group_name'
+				},
 			};
 		},
 		methods: {
-      filterNode(value, data) {
-        if (!value) return true;
-        return data.label.indexOf(value) !== -1;
-      },
+			filterNode(value, data) {
+				if (!value) return true;
+				return data.label.indexOf(value) !== -1;
+			},
 			handleCommand(command) {
 				if (command.action === "del") {
 					this.delete(command.data.id);
@@ -195,7 +135,11 @@
 			},
 			//获取分组列表
 			async getGroup(curr, projectId) {
-				const {data, http_status, msg} = await lists({
+				const {
+					data,
+					http_status,
+					msg
+				} = await lists({
 					page: curr,
 					group_type: this.type,
 					project_id: projectId ? projectId : 0,
@@ -325,7 +269,11 @@
 					return;
 				}
 
-				const {data, http_status, msg} = await create({
+				const {
+					data,
+					http_status,
+					msg
+				} = await create({
 					project_id: this.$route.params.projectId,
 					group_type: this.type,
 					...this.form,
@@ -354,9 +302,9 @@
 					this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
 				}
 			},
-		      filterText(val) {
-		        this.$refs.tree.filter(val);
-		      }
+			filterText(val) {
+				this.$refs.tree.filter(val);
+			}
 		},
 		components: {},
 		mixins: [controlShow],
@@ -433,13 +381,14 @@
 					align-items: center;
 
 					position: relative;
-					.sort{
-					    position: absolute;
-					    right: 50px;
 
-					    a{
-					    	color: #857979;
-					    }
+					.sort {
+						position: absolute;
+						right: 50px;
+
+						a {
+							color: #857979;
+						}
 					}
 
 					i {
@@ -474,12 +423,27 @@
 			}
 		}
 	}
+
 	.custom-tree-node {
-	    flex: 1;
-	    display: flex;
-	    align-items: center;
-	    justify-content: space-between;
-	    font-size: 14px;
-	    padding-right: 8px;
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 14px;
+		padding-right: 8px;
+	}
+
+	.el-dropdown-link {
+		cursor: pointer;
+		color: #409EFF;
+	}
+	.el-icon-arrow-down {
+		font-size: 12px;
+	}
+	.demonstration {
+		display: block;
+		color: #8492a6;
+		font-size: 14px;
+		margin-bottom: 20px;
 	}
 </style>
