@@ -1,7 +1,7 @@
 <template>
 	<div class="api-list">
 		<div class="api-box">
-			<el-table :data="apiList" stripe style="width: 100%" v-loading="loading" border>
+			<el-table :data="api_lists" stripe style="width: 100%" v-loading="loading" border>
 				<el-table-column prop="api_name" label="名称"></el-table-column>
 				<el-table-column label="api_url">
 					<template slot-scope="scope">
@@ -63,7 +63,7 @@
 		data() {
 			return {
 				loading: true,
-				apiList: {},
+				api_lists: [],
 				ps: 10,
 				cp: 1,
 				count: 0,
@@ -113,7 +113,7 @@
 							search,
 						});
 
-                this.apiList = data.data;
+                this.api_lists = data.data;
                 this.count = parseInt(data.count);
                 this.loading = false;
 			},

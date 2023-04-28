@@ -21,14 +21,32 @@
 		</ul>
 		<!-- 分组操作-end -->
 
+		<!-- 分组列表-start -->
+
 		<!-- Tree -->
 		<el-input placeholder="输入关键字进行过滤" v-model="filterText">
 		</el-input>
+		<!--
+		highlight-current 是否高亮当前选中节点，默认值是 false。
+		default-expand-all 是否默认展开所有节点
+		draggable 是否开启拖拽节点功能
+		expand-on-click-node 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+		-->
 		<el-tree :filter-node-method="filterNode" ref="tree" :props="defaultProps" class="filter-tree" :data="groups"
-			node-key="group_id" default-expand-all="true" @node-drag-start="handleDragStart"
-			@node-drag-enter="handleDragEnter" @node-drag-leave="handleDragLeave" @node-drag-over="handleDragOver"
-			@node-drag-end="handleDragEnd" @node-drop="handleDrop" draggable="true" :allow-drop="allowDrop"
-			:allow-drag="allowDrag" highlight-current="true" icon-class="el-icon-s-operation">
+			node-key="group_id"
+			:expand-on-click-node=false
+			:default-expand-all=false
+			highlight-current
+			draggable
+			@node-drag-start="handleDragStart"
+			@node-drag-enter="handleDragEnter"
+			@node-drag-leave="handleDragLeave"
+			@node-drag-over="handleDragOver"
+			@node-drag-end="handleDragEnd"
+			@node-drop="handleDrop"
+			:allow-drop="allowDrop"
+			:allow-drag="allowDrag"
+			icon-class="el-icon-s-operation">
 			<span class="custom-tree-node" slot-scope="{ node, data }">
 				<span>{{ node.label }}</span>
 				<el-dropdown trigger="click" @command="handleCommand">
@@ -36,23 +54,36 @@
 						<span class="el-icon-s-unfold"></span>
 					</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:child,parent:item}">上移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:child,parent:item}">下移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'edit',data:child,parent:item}">编辑</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'del',data:child,parent:item}">删除</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">默认展示分组</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">上移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">下移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'edit',data:node}">编辑</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-plus" :command="{action:'del',data:node}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</span>
 		</el-tree>
+		<!-- 分组列表-end -->
 
 		<!-- 新增分组-start -->
 		<el-dialog title="新增分组" :visible.sync="dialogFormVisible" width="40%">
 			<el-form :model="form" ref="form">
 				<el-form-item label="上级" :label-width="formLabelWidth">
-					<el-select v-model="form.parent_id" placeholder="请选择上级" :disabled="isFirstUpdate" clearable>
-						<el-option v-for="item in groups" :key="item.id" :label="item.group_name" :value="item.id">
-						</el-option>
-					</el-select>
+					<el-cascader
+					    v-model="form.parent_id"
+					    :options="groups"
+					    :props="{
+							children: '_child',
+							label: 'group_name',
+							expandTrigger: 'hover',
+							// 选择任意一级选项
+							checkStrictly: 'true',
+							value: 'group_id'
+						}"
+					    clearable
+					    filterable
+					    @change="selectGroupHandleChange">
+					    </el-cascader>
 				</el-form-item>
 
 				<el-form-item label="组名" :label-width="formLabelWidth">
@@ -122,16 +153,9 @@
 			};
 		},
 		methods: {
-			filterNode(value, data) {
-				if (!value) return true;
-				return data.label.indexOf(value) !== -1;
-			},
-			handleCommand(command) {
-				if (command.action === "del") {
-					this.delete(command.data.id);
-				} else if (command.action === "edit") {
-					this.showUpdateDiglog(command.data, command.parent);
-				}
+			// 选择父级分组
+			selectGroupHandleChange(item){
+				console.log(item[item.length]);
 			},
 			//获取分组列表
 			async getGroup(curr, projectId) {
@@ -145,13 +169,6 @@
 					project_id: projectId ? projectId : 0,
 				});
 
-				for (const key in data) {
-					data[key].isClick = false;
-					data[key].isClickShowChild = false;
-					for (const childKey in data[key]["childs"]) {
-						data[key]["childs"][childKey].isClick = false;
-					}
-				}
 				this.groups = data;
 			},
 			//删除分组
@@ -188,39 +205,10 @@
 						this.showCreateGroup = false;
 					});
 			},
-			//点击折叠按钮
-			clickFoldBtn(index) {
-				if (index !== null) {
-					this.groups[index].isClickShowChild = this.groups[index].isClickShowChild ?
-						false :
-						true;
-				}
-			},
 			//点击分组
 			clientBtn(group, index, isChild = false) {
-				if (!isChild) {
-					for (const key in this.groups) {
-						this.groups[key].isClick = false;
-					}
-					if (index !== null) {
-						this.groups[index].isClick = true;
-						this.groups[index].isClickShowChild = true;
-					}
-				}
-
 				this.$emit("change-group", group ? group.group_id : 0);
 			},
-			showUpdateDiglog(data, parent = null) {
-				this.isFirstUpdate = true;
-				this.form.group_name = data.group_name;
-				if (parent) {
-					this.form.parent_id = parent.id;
-					this.isFirstUpdate = false;
-				}
-				this.updateId = data.id;
-				this.dialogFormVisible = true;
-			},
-
 			//更新数据
 			updateGroup() {
 				if (this.updateId <= 0) {
@@ -295,6 +283,61 @@
 
 				this.dialogFormVisible = false;
 			},
+
+
+			// `分组`的点击事件
+			handleCommand(command) {
+				if (command.action === "del") {
+					this.delete(command.data.id);
+				} else if (command.action === "edit") {
+					this.showUpdateDiglog(command.data, command.parent);
+				}
+			},
+			showUpdateDiglog(data, parent = null) {
+				this.isFirstUpdate = true;
+				this.form.group_name = data.group_name;
+				if (parent) {
+					this.form.parent_id = parent.id;
+					this.isFirstUpdate = false;
+				}
+				this.updateId = data.id;
+				this.dialogFormVisible = true;
+			},
+			/**
+			 * Tree控件相关的函数
+			 */
+			filterNode(value, data) {
+				if (!value) return true;
+				return data.label.indexOf(value) !== -1;
+			},
+			handleDragStart(node, ev) {
+				console.log('drag start', node);
+			},
+			handleDragEnter(draggingNode, dropNode, ev) {
+				console.log('tree drag enter: ', dropNode.label);
+			},
+			handleDragLeave(draggingNode, dropNode, ev) {
+				console.log('tree drag leave: ', dropNode.label);
+			},
+			handleDragOver(draggingNode, dropNode, ev) {
+				console.log('tree drag over: ', dropNode.label);
+			},
+			handleDragEnd(draggingNode, dropNode, dropType, ev) {
+				console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+			},
+			handleDrop(draggingNode, dropNode, dropType, ev) {
+				console.log('tree drop: ', dropNode.label, dropType);
+			},
+			allowDrop(draggingNode, dropNode, type) {
+				if (dropNode.data.label === '二级 3-1') {
+					return type !== 'inner';
+				} else {
+					return true;
+				}
+			},
+	      	allowDrag(draggingNode) {
+	        	return draggingNode.data.label.indexOf('三级 3-2-2') === -1;
+	      	}
 		},
 		watch: {
 			$route: function(to) {
