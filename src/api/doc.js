@@ -34,6 +34,15 @@ export async function update(data) {
     })
 }
 
+export async function setTop(data) {
+    return await request({
+        url: `/doc/set-top`,
+        method: 'patch',
+        data
+    })
+}
+
+
 export async function deleteDoc(data) {
     return await request({
         url: `/doc-delete`,

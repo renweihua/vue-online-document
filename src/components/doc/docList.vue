@@ -7,7 +7,9 @@
 				<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 				<el-table-column prop="is_top" label="置顶" width="130">
 					<template slot-scope="scope">
-						<el-switch v-model="scope.row.is_top" active-value="1" inactive-value="0"
+						<el-switch v-model="scope.row.is_top"
+							:active-value="1"
+							:inactive-value="0"
 							:disabled="!controlShow()" @change="setIsTop(scope.row)"></el-switch>
 					</template>
 				</el-table-column>
@@ -24,7 +26,7 @@
 			</el-table>
 		</div>
 		<div class="page" v-show="!$route.query.search">
-			<el-pagination background layout="total,prev, pager, next" :total="count" :page-size="ps" :current-page="cp"
+			<el-pagination background layout="total,prev, pager, next" :total="count" :page-size="per_page" :current-page="cp"
 				@current-change="changePage($event)"></el-pagination>
 		</div>
 	</div>
@@ -33,7 +35,8 @@
 <script>
 	import controlShow from "../../mixins/controlShow";
 	import {
-		lists
+		lists,
+		setTop
 	} from "@/api/doc"
 
 	const CODE_OK = 200;
@@ -58,11 +61,14 @@
 				loading: true,
 				docList: [],
 				cp: 1,
-				ps: 10,
+				per_page: 10,
 				count: 0,
 			};
 		},
 		methods: {
+			showIsTop(item){
+return false;
+			},
 			restoreDoc(id) {
 				this.$confirm("该文档将被还原, 是否继续?", "提示", {
 						confirmButtonText: "确定",
@@ -156,7 +162,8 @@
 					search,
 				});
 				this.docList = data.data;
-				this.count = Number.parseInt(data.count);
+				this.count = Number.parseInt(data.total);
+				this.per_page = Number.parseInt(data.per_page);
 
 				// 关闭加载进度条
 				this.loading = false;
@@ -169,19 +176,21 @@
 					}
 				});
 			},
-			setIsTop(data) {
-				this.$http
-					.post("/doc/update", {
-						is_top: data.is_top == 0 ? 0 : 1,
-						id: data.doc_id,
-					})
-					.then((res) => {
-						res = res.data;
-						if (res.code !== CODE_OK) {
-							data.is_top = 0;
-							this.$message.error(res.msg);
-						}
+			async setIsTop(item) {
+				const {
+					data,
+					http_status,
+					msg
+				} = await setTop({
+						is_top: item.is_top == 0 ? 0 : 1,
+						doc_id: item.doc_id,
 					});
+
+				if (http_status !== this.HTTP_SUCCESS) {
+					item.is_top = !item.is_top;
+				}else{
+					this.$message.success(msg);
+				}
 			},
 		},
 		watch: {
