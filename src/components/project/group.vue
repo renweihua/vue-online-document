@@ -8,7 +8,7 @@
 					<slot>全 部</slot>
 				</a>
 			</li>
-			<li @click="dialogFormVisible = true" v-show="controlShow()">
+			<li @click="dialogFormVisible = true;groupDiaText = '新增分组';" v-show="controlShow()">
 				<a href="javascript:;">
 					<i class="el-icon-delete"></i> 新增分组
 				</a>
@@ -73,7 +73,7 @@
 		<!-- 分组列表-end -->
 
 		<!-- 新增/编辑 分组-start -->
-		<el-dialog title="新增分组" :visible.sync="dialogFormVisible" width="40%">
+		<el-dialog :title="groupDiaText" :visible.sync="dialogFormVisible" width="40%">
 			<el-form :model="form" ref="form">
 				<el-form-item label="上级" :label-width="formLabelWidth">
 					<el-cascader
@@ -154,6 +154,8 @@
 		},
 		data() {
 			return {
+				// 分组弹出层的文本
+				groupDiaText: '新增分组',
 				// 分组列表
 				groups: [],
 				// 下拉选择的分组列表：编辑分组时，需要设置自己为`禁用不可选项`
@@ -324,6 +326,7 @@
 				}
 			},
 			showUpdateDiglog(item) {
+				this.groupDiaText = '编辑分组';
 				this.form = item;
 				this.dialogFormVisible = true;
 				// 设置下拉框的分组数据
@@ -331,6 +334,9 @@
 			},
 			// 获取默认展示子节点的分组Ids
 			setGroupDisabledBySelf(groups){
+				if(!this.form || !this.form.group_id){
+					return groups;
+				}
 				groups.map((item)=>{
 					if(item.group_id == this.form.group_id){
 						item.disabled = true;
