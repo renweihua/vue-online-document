@@ -21,8 +21,7 @@
 									label: 'group_name',
 								}"
 							    clearable
-							    filterable
-							    @change="selectGroupHandleChange">
+							    filterable>
 							</el-cascader>
 						</el-form-item>
 					</el-col>
