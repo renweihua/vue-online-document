@@ -89,6 +89,17 @@
 				<el-form-item label="组名" :label-width="formLabelWidth">
 					<el-input v-model="form.group_name" autocomplete="off" style="width:70%"></el-input>
 				</el-form-item>
+
+				<el-form-item label="子节点是否默认展示" :label-width="formLabelWidth">
+					<el-select v-model="form.default_expand" placeholder="请选择">
+					    <el-option
+					      v-for="item in [{'label': '否', 'value': 0}, {'label': '是', 'value': 1}]"
+					      :key="item.value"
+					      :label="item.label"
+					      :value="item.value">
+					    </el-option>
+					</el-select>
+				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click=" updateId > 0 ? updateGroup() : createGroup()">确 定</el-button>
 					<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -137,8 +148,11 @@
 				dialogFormVisible: false,
 				isFirstUpdate: false,
 				form: {
+					group_type: this.type,
+					project_id: this.$route.params.projectId,
 					parent_id: 0,
 					group_name: "",
+					default_expand:0,
 				},
 				updateId: 0,
 
@@ -155,7 +169,7 @@
 		methods: {
 			// 选择父级分组
 			selectGroupHandleChange(item){
-				console.log(item[item.length]);
+				this.form.parent_id = item[item.length - 1];
 			},
 			//获取分组列表
 			async getGroup(curr, projectId) {
@@ -253,7 +267,7 @@
 			},
 			async createGroup() {
 				if (this.form.group_name.length < 1) {
-					this.$message.error("分组标题不能为空");
+					this.$message.error("分组名称不能为空");
 					return;
 				}
 
@@ -261,18 +275,13 @@
 					data,
 					http_status,
 					msg
-				} = await create({
-					project_id: this.$route.params.projectId,
-					group_type: this.type,
-					...this.form,
-				});
+				} = await create(this.form);
 
 				if (http_status === CODE_OK) {
 					this.form.group_name = '';
 					this.form.parent_id = 0;
+					this.form.default_expand = 0;
 					this.$message.success(msg);
-				} else {
-					this.$message.error(msg);
 				}
 
 				this.getGroup(
