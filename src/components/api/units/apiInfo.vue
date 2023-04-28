@@ -5,16 +5,30 @@
 				<el-form-item>
 					<el-col :span="5">
 						<el-form-item prop="group_id" label="分组" label-width="80px">
-							<el-select v-model="apiInfo.group_id" placeholder="分组" style="width: 90%"
-								@change="selectChange">
-								<el-option v-for="item in groupList" :key="item.group_id" :label="item.group_name"
-									:value="item.group_id"></el-option>
-							</el-select>
+							<el-cascader
+							    v-model="apiInfo.group_id"
+							    placeholder="默认为一级分组"
+							    :options="groupList"
+							    :props="{
+									children: '_child',
+									label: 'group_name',
+									expandTrigger: 'hover',
+									// 选择任意一级选项
+									checkStrictly: 'true',
+									// 指定选项的值为选项对象的某个属性值
+									value: 'group_id',
+									// 指定选项标签为选项对象的某个属性值
+									label: 'group_name',
+								}"
+							    clearable
+							    filterable
+							    @change="selectGroupHandleChange">
+							</el-cascader>
 						</el-form-item>
 					</el-col>
 					<el-col :span="5">
 						<el-form-item label="请求协议" prop="http_protocol" label-width="80px">
-							<el-select v-model="apiInfo.http_protocol" placeholder="选择请求协议" style="width: 90%">
+							<el-select v-model="apiInfo.http_protocol" placeholder="选择请求协议">
 								<el-option v-if="propertyList && propertyList.http_protocol" v-for="item in propertyList.http_protocol" :key="item" :label="item" :value="item"></el-option>
 							</el-select>
 						</el-form-item>
@@ -22,7 +36,7 @@
 
 					<el-col :span="5">
 						<el-form-item label="请求方式" prop="http_method" label-width="80px">
-							<el-select v-model="apiInfo.http_method" placeholder="选择请求方式" style="width: 90%">
+							<el-select v-model="apiInfo.http_method" placeholder="选择请求方式">
 								<el-option-group
 									v-if="propertyList && propertyList.http_method"
 					                v-for="(group, index) in propertyList.http_method"
@@ -66,40 +80,7 @@
 			},
 		},
 		methods: {
-			selectChange(value) {
-				if (!value) {
-					return;
-				}
-
-				this.$http
-					.get("/group/list", {
-						params: {
-							cp: 1,
-							type: 0,
-							ps: 1000,
-							projectId: this.$route.params.projectId,
-							pId: value,
-						},
-					})
-					.then(
-						(response) => {
-							response = response.data;
-							if (response.code === 200) {
-								if (response.data) {
-									this.childGroup = response.data;
-								}
-							}
-						},
-						(res) => {
-							let response = res.data;
-							this.$message.error(
-								"获取数据-操作失败!" + !response.msg ? response.msg : ""
-							);
-						}
-					);
-			},
 		},
-
 		data() {
 			return {
 				rules: {

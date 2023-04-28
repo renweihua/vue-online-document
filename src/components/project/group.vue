@@ -72,12 +72,13 @@
 		</el-tree>
 		<!-- 分组列表-end -->
 
-		<!-- 新增分组-start -->
+		<!-- 新增/编辑 分组-start -->
 		<el-dialog title="新增分组" :visible.sync="dialogFormVisible" width="40%">
 			<el-form :model="form" ref="form">
 				<el-form-item label="上级" :label-width="formLabelWidth">
 					<el-cascader
 					    v-model="form.parent_id"
+					    placeholder="默认为一级分组"
 					    :options="selectGroups"
 					    :props="{
 							children: '_child',
@@ -101,7 +102,7 @@
 				</el-form-item>
 
 				<el-form-item label="子节点是否默认展示" :label-width="formLabelWidth">
-					<el-select v-model="form.default_expand" placeholder="请选择">
+					<el-select v-model="form.default_expand">
 					    <el-option
 					      v-for="item in [{'label': '否', 'value': 0}, {'label': '是', 'value': 1}]"
 					      :key="item.value"
@@ -116,7 +117,7 @@
 				</el-form-item>
 			</el-form>
 		</el-dialog>
-		<!-- 新增分组-end -->
+		<!-- 新增/编辑 分组-end -->
 	</div>
 </template>
 
@@ -198,7 +199,7 @@
 					group_type: this.type,
 					project_id: projectId ? projectId : 0,
 				});
-				this.groups = data;
+				this.selectGroups = this.groups = data;
 				// 设置默认展示子节点的分组Id
 				this.setDefaultExpand();
 			},
