@@ -28,11 +28,17 @@
 		</el-input>
 		<!--
 		highlight-current 是否高亮当前选中节点，默认值是 false。
+
 		default-expand-all 是否默认展开所有节点
+
 		draggable 是否开启拖拽节点功能
+
 		expand-on-click-node 是否在点击节点的时候展开或者收缩节点， 默认值为 true，如果为 false，则只有点箭头图标的时候才会展开或者收缩节点。
+
+		default-expanded-keys 默认展开的节点的 key 的数组
 		-->
 		<el-tree :filter-node-method="filterNode" ref="tree" :props="defaultProps" class="filter-tree" :data="groups"
+  		:default-expanded-keys="defaultExpandByGroups"
 			node-key="group_id"
 			:expand-on-click-node=false
 			:default-expand-all=false
@@ -46,7 +52,7 @@
 			@node-drop="handleDrop"
 			:allow-drop="allowDrop"
 			:allow-drag="allowDrag"
-			icon-class="el-icon-s-operation">
+			icon-class="el-icon-folder-opened">
 			<span class="custom-tree-node" slot-scope="{ node, data }">
 				<span>{{ node.label }}</span>
 				<el-dropdown trigger="click" @command="handleCommand">
@@ -54,11 +60,12 @@
 						<span class="el-icon-s-unfold"></span>
 					</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">默认展示分组</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">上移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'sort',data:node}">下移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'edit',data:node}">编辑</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-plus" :command="{action:'del',data:node}">删除</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-open" :command="{action:'sort',data:node}">默认打开子节点</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-turn-off" :command="{action:'sort',data:node}">默认关闭子节点</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',data:node}">上移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',data:node}">下移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',data:node}">编辑</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'del',data:node}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</span>
@@ -78,7 +85,10 @@
 							expandTrigger: 'hover',
 							// 选择任意一级选项
 							checkStrictly: 'true',
-							value: 'group_id'
+							// 指定选项的值为选项对象的某个属性值
+							value: 'group_id',
+							// 指定选项标签为选项对象的某个属性值
+							label: 'group_name',
 						}"
 					    clearable
 					    filterable
@@ -142,11 +152,11 @@
 		},
 		data() {
 			return {
+				// 分组列表
 				groups: [],
-				curr: 1,
-				pageSize: 100,
-				dialogFormVisible: false,
-				isFirstUpdate: false,
+				// 默认展示子节点的分组Id
+				defaultExpandByGroups: [],
+				// 表单数据
 				form: {
 					group_type: this.type,
 					project_id: this.$route.params.projectId,
@@ -154,12 +164,16 @@
 					group_name: "",
 					default_expand:0,
 				},
+
+				curr: 1,
+				pageSize: 100,
+				dialogFormVisible: false,
+				isFirstUpdate: false,
 				updateId: 0,
 
 
 				// 树形控件
 				filterText: '',
-
 				defaultProps: {
 					children: '_child',
 					label: 'group_name'
@@ -182,8 +196,26 @@
 					group_type: this.type,
 					project_id: projectId ? projectId : 0,
 				});
-
 				this.groups = data;
+				// 设置默认展示子节点的分组Id
+				this.setDefaultExpand();
+			},
+			// 设置默认展示子节点的分组Id
+			setDefaultExpand(){
+				this.defaultExpandByGroups = this.getDefaultExpandIds(this.groups);
+			},
+			// 获取默认展示子节点的分组Ids
+			getDefaultExpandIds(groups){
+				let ids = [];
+				groups.map((item)=>{
+					if(item.default_expand == 1){
+						ids.push(item.group_id);
+					}
+					if(item._child !== undefined){
+						ids = ids.concat(this.getDefaultExpandIds(item._child));
+					}
+				});
+				return ids;
 			},
 			//删除分组
 			delete(id) {
@@ -228,14 +260,8 @@
 				if (this.updateId <= 0) {
 					return;
 				}
-
 				this.$http
-					.post("/group/update", {
-						group_name: this.form.group_name,
-						parent_id: this.form.parent_id,
-						id: this.updateId,
-						type: this.type,
-					})
+					.post("/group/update", this.form)
 					.then(
 						(response) => {
 							response = response.data;
@@ -255,13 +281,8 @@
 							this.updateId = 0;
 							this.form.group_name = "";
 							this.form.parent_id = 0;
+							this.form.default_expand = 0;
 							this.isFirstUpdate = false;
-						},
-						(res) => {
-							let response = res.data;
-							this.$message.error(
-								"获取数据-操作失败!" + !response.msg ? response.msg : ""
-							);
 						}
 					);
 			},
