@@ -17,7 +17,7 @@
 						<el-button type="primary" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
 							:disabled="$store.state.userInfo.type == 1">编辑</el-button>
 						<el-divider direction="vertical"></el-divider>
-						<el-button type="danger" slot="reference" @click.stop="deleteData(scope.row.project_id)"
+						<el-button type="danger" slot="reference" @click.stop="deleteData(scope.row)"
 							:disabled="$store.state.userInfo.type == 1">删除</el-button>
 					</template>
 				</el-table-column>
@@ -62,7 +62,8 @@
 	import {
 		lists,
 		create,
-		update
+		update,
+		deleteProject
 	} from '@/api/project';
 	export default {
 		name: "projectList",
@@ -153,28 +154,28 @@
 				});
 			},
 			//删除数据
-			deleteData(id) {
-				this.$confirm("此操作将删除该分组, 是否继续?", "提示", {
+			deleteData(item) {
+				this.$confirm(
+					'您确定要删除项目`' + item.project_name + '`? <br>\r\n\n <strong><span style="color: #f56c6c;">删除之后将无法恢复，请谨慎操作！</span></strong>',
+					"提示",
+					{
+						dangerouslyUseHTMLString: true,
 						confirmButtonText: "确定",
 						cancelButtonText: "取消",
 						type: "warning",
 					})
 					.then(() => {
-						this.$http
-							.post("/project/delete", {
-								id,
+						deleteProject({
+								project_id: item.project_id,
 							})
 							.then((res) => {
-								let response = res.data;
-								if (response.code === CODE_OK) {
-									this.$message.success("成功!" + response.msg);
+								console.log(res);
+								if (res.http_status === this.HTTP_SUCCESS) {
+									this.$message.success(res.msg);
 									this.getProjectList(this.currPage);
-								} else {
-									this.$message.error("失败!" + response.msg);
 								}
 							});
-					})
-					.catch(() => {});
+					});
 			},
 			//更新
 			updateProject() {

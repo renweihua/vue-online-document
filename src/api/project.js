@@ -36,7 +36,7 @@ export async function update(data) {
 
 export async function deleteProject(data) {
     return await request({
-        url: `/project-delete`,
+        url: `/project/delete`,
         method: 'delete',
         data
     })
