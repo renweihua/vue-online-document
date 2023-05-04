@@ -8,7 +8,7 @@
 					<slot>全 部</slot>
 				</a>
 			</li>
-			<li @click="dialogFormVisible = true;groupDiaText = '新增分组';" v-show="controlShow()">
+			<li @click="dialogFormVisible = true;form.group_id = 0;groupDiaText = '新增分组';" v-show="controlShow()">
 				<a href="javascript:;">
 					<i class="el-icon-delete"></i> 新增分组
 				</a>
