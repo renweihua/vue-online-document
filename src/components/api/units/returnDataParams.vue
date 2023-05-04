@@ -17,10 +17,10 @@
 			<table>
 				<tr>
 					<th>字段名</th>
-					<th>相关类名</th>
-					<th>说明</th>
+					<th>字段值</th>
 					<th>必含</th>
 					<th>类型</th>
+					<th>说明</th>
 					<th>操作</th>
 				</tr>
 				<tr v-for="(item,index) in returnDataItem" :key="item.id">
@@ -29,25 +29,28 @@
 							v-on:input="dataInput(index,$event)" />
 					</td>
 					<td>
-						<input type="text" placeholder v-model="item.object_name" />
-					</td>
-					<td>
-						<input type="text" placeholder="参数名" v-model="item.description" />
+						<input type="text" placeholder v-model="item.field_value" />
 					</td>
 					<td>
 						<input type="checkbox" name id v-model="item.required" />
 					</td>
 					<td>
-						<el-select v-model="item.type" placeholder="请选择类型" v-if="propertyList && propertyList.var_type">
-							<el-option-group v-for="(group,index) in propertyList.var_type" :key="group.label"
-								:label="index">
-								<el-option v-for="item in group" :key="item.tag_name" :label="item.tag_name"
-									:value="item.tag_name"></el-option>
-							</el-option-group>
+						<el-select v-model="item.field_type" placeholder="请设置字段类型">
+							<el-option-group
+								v-if="propertyList && propertyList.field_type"
+				                v-for="(group, index) in propertyList.field_type"
+				                :key="index"
+				                :label="group.label"
+				            >
+                            	<el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+                            </el-option-group>
 						</el-select>
 					</td>
 					<td>
-						<div v-show="item.field_name.length >= 1">
+						<input type="text" placeholder="参数名" v-model="item.description" />
+					</td>
+					<td>
+						<div>
 							<el-button size="mini" icon="el-icon-delete" @click="dataDelete(index)"></el-button>
 						</div>
 					</td>
@@ -69,10 +72,10 @@
 				dialogFormVisible: false,
 				returnDataItem: [{
 					field_name: "",
-					object_name: "",
+					field_value: "",
+					field_type: "string",
 					description: "",
 					required: false,
-					type: "string",
 					handle: true,
 					is_add: false,
 				}, ],
@@ -106,10 +109,10 @@
 				for (let item of items) {
 					this.returnDataItem.push({
 						field_name: item,
-						object_name: "",
+						field_value: "",
 						description: "",
 						required: true,
-						type: "string",
+						field_type: "string",
 						handle: true,
 						is_add: false,
 					});
@@ -117,10 +120,10 @@
 
 				this.returnDataItem.push({
 					field_name: "",
-					object_name: "",
+					field_value: "",
 					description: "",
 					required: true,
-					type: "string",
+					field_type: "string",
 					handle: true,
 					is_add: false,
 				});
@@ -155,10 +158,10 @@
 					if (txt.length >= 1 && this.returnDataItem[index].is_add === false) {
 						this.returnDataItem.push({
 							field_name: "",
-							object_name: "",
+							field_value: "",
 							description: "",
 							required: false,
-							type: "string",
+							field_type: "string",
 							handle: true,
 							is_add: false,
 						});
