@@ -23,8 +23,11 @@
 			:params="http_params" />
 
 		<!-- 响应参数 -->
-		<returnParams :propertyList="propertyList" v-on:update="apiData.response_params=$event"
-			:returnData="response_params" />
+		<returnParams :propertyList="propertyList"
+			v-on:update="apiData.response_params=$event"
+			:returnData="response_params"
+			v-on:update:setResponseSample="apiData.response_sample = $event"
+			:responseSample="apiData.response_sample" />
 	</div>
 </template>
 
@@ -36,7 +39,7 @@
 	import apiInfo from "./units/apiInfo.vue";
 	import detailDescription from "./units/detailDescription.vue";
 	import getCommonProperty from "../../mixins/getCommonProperty";
-	
+
 	const CODE_OK = 200;
 	export default {
 		name: "apiEdit",
@@ -61,6 +64,7 @@
 				http_params: [],
 				response_params: [],
 				isCopy: false,
+				response_sample: {}
 			};
 		},
 		methods: {

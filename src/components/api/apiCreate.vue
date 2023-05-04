@@ -16,7 +16,7 @@
 
 		<requestParams :propertyList="propertyList" v-on:update:header="apiData.http_header = $event"
 			v-on:update:param="apiData.http_params = $event" />
-		<returnParams :propertyList="propertyList" v-on:update="apiData.response_params = $event" />
+		<returnParams :propertyList="propertyList" v-on:update="apiData.response_params = $event" v-on:update:setResponseSample="apiData.response_sample = $event" />
 	</div>
 </template>
 

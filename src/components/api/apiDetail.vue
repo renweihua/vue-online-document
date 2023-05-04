@@ -80,18 +80,18 @@
 				</tr>
 				<tr>
 					<th>参数</th>
-					<th>说明</th>
+					<th>示例</th>
 					<th>必填</th>
 					<th>类型</th>
-					<th>示例</th>
+					<th>说明</th>
 				</tr>
 				<tbody>
 					<tr v-for="(item,index) in apiData.http_params" :key="index">
 						<td>{{item.name}}</td>
-						<td>{{item.desc}}</td>
+						<td>{{item.value}}</td>
 						<td>{{item.required}}</td>
 						<td>{{item.type}}</td>
-						<td>{{item.example}}</td>
+						<td>{{item.description}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -107,17 +107,17 @@
 				<tr>
 					<th>字段</th>
 					<th>类名</th>
-					<th>说明</th>
 					<th>必含</th>
 					<th>类型</th>
+					<th>说明</th>
 				</tr>
 				<tbody v-if=" apiData.response_params && apiData.response_params[0]">
 					<tr v-for="(item,index) in apiData.response_params" :key="index">
 						<td>{{item.field_name}}</td>
-						<td>{{item.object_name}}</td>
-						<td>{{item.description}}</td>
+						<td>{{item.field_value}}</td>
 						<td>{{item.required}}</td>
 						<td>{{item.type}}</td>
+						<td>{{item.description}}</td>
 					</tr>
 				</tbody>
 				<tbody v-else>

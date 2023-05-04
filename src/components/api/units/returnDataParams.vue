@@ -66,6 +66,7 @@
 		props: {
 			propertyList: [Object, Array],
 			returnData: Array,
+			responseSample: Object,
 		},
 		data: function() {
 			return {
@@ -98,6 +99,8 @@
 
 				this.parseJson(json, data);
 				this.generatorItem(data);
+				// 设置成功json
+				this.responseSample.success = json;
 			},
 			//生成返回数据条目
 			generatorItem(items) {
@@ -182,6 +185,15 @@
 				if (val.length) {
 					this.returnDataItem = val;
 				}
+			},
+			responseSample: function(val) {
+				if (val) {
+					this.responseSample = val;
+					if(val.success) this.jsonData = JSON.stringify(val.success);
+				}
+			},
+			setResponseSample: function(val) {
+				this.$emit("update:setResponseSample", val);
 			},
 		},
 	};
