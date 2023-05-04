@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import { detail, update } from "@/api/api";
+    import { detail, create, update } from "@/api/api";
     import { lists as groups } from "@/api/group";
 	import returnParams from "./units/returnDataParams.vue";
 	import requestParams from "./units/requestDataParams.vue";
@@ -98,20 +98,25 @@
 					if (validate) {
 						let detail = JSON.stringify(this.apiData);
 						detail = JSON.parse(detail);
+						// 复制接口则重置Id
+						if(this.isCopy){
+							detail.api_id = 0;
+						}
 
-						update(detail)
-							.then((res) => {
-                                console.log(res);
-								if (res.http_status === CODE_OK) {
-									this.$message.success(res.msg);
-									this.$router.push({
-										name: "apiDetail",
-										params: {
-											apiId: this.apiId
-										},
-									});
-								}
-							});
+						let response = this.isCopy ? create(detail) : update(detail);
+
+						response.then((res) => {
+                            console.log(res);
+							if (res.http_status === CODE_OK) {
+								this.$message.success(res.msg);
+								this.$router.push({
+									name: "apiDetail",
+									params: {
+										apiId: this.apiId
+									},
+								});
+							}
+						});
 					}
 				});
 			},
