@@ -39,7 +39,8 @@
 				</el-form-item>
 				<el-form-item label="项目类型" prop="project_type">
 					<el-select v-model="form.project_type" placeholder="请选择">
-						<el-option label="pc" value="0"></el-option>
+						<el-option label="PC端" :value="0"></el-option>
+						<el-option label="Web移动端" :value="1"></el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="项目描述" prop="project_description">
