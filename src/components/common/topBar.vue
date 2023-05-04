@@ -28,6 +28,9 @@
 </template>
 
 <script>
+    import {
+        removeUser
+    } from '@/utils/auth';
 export default {
   name: "topBar",
   created() {},
@@ -72,8 +75,8 @@ export default {
   methods: {
     //退出登录
     loginOut() {
-      localStorage.removeItem("userInfo");
       this.$store.commit("saveUserInfo", {});
+      removeUser();
       this.$router.push("/login");
     },
     //到个人中心

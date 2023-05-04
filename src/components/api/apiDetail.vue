@@ -9,9 +9,9 @@
 		</div>
 		<!-- api信息 -->
 		<div class="api-detail-info">
-			<em>
+			<em v-if="apiData.group_id">
 				分组:
-				<i>{{apiData.group_name}}</i>
+				<i>{{apiData.group.group_name}}</i>
 			</em>
 			<el-divider direction="vertical"></el-divider>
 			<em>

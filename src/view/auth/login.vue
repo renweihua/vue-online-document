@@ -31,7 +31,7 @@
         login as auth
     } from '@/api/auth';
     import {
-        setUser, removeUser
+        getUser, setUser, removeUser
     } from '@/utils/auth';
     export default {
         name: "loginPage",
@@ -86,15 +86,17 @@
             },
             //通过localStorage登录
             loginByLocalStorage() {
-                let userInfo1 = JSON.parse(localStorage.getItem("userInfo"));
+                let userInfo1 = getUser();
+                console.log(userInfo1);
                 if (userInfo1) {
                     let currDate = new Date();
-                    let expireTime = new Date(Date.parse(userInfo1.token_expire_time));
+                    let expireTime = new Date(userInfo1.expires_time * 1000);
                     if (expireTime > currDate) {
                         this.$store.commit("saveUserInfo", userInfo1);
+                        setUser(userInfo1);
                         this.$router.push("/");
                     } else {
-                        localStorage.removeItem("userInfo");
+                        removeUser();
                     }
                 }
             },

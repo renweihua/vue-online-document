@@ -5,7 +5,7 @@ import {
     Message
 } from 'element-ui';
 import store from '@/store/main.js';
-import { getUser } from '@/utils/auth';
+import { getUser, removeUser } from '@/utils/auth';
 
 import router from "@/router";
 
@@ -123,7 +123,7 @@ service.interceptors.response.use(
                     break;
                 case 401: // 认证失败
                     msg = error.response.data.msg;
-                    localStorage.removeItem("userInfo");
+                    removeUser();
                     router.push("/login");
                     break;
             }

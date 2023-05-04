@@ -45,11 +45,13 @@ const router = new VueRouter({
 							component: resolve => require(['@/view/project/public-projects'], resolve),
 							name: "public-projects"
 						},
+						/*
 						{
 							path: "/userManager",
 							component: resolve => require(['@/view/user/userManager'], resolve),
 							name: "userManager"
 						},
+						*/
 						{
 							path: "/user",
 							component: resolve => require(['@/view/user/myCenter'], resolve),
