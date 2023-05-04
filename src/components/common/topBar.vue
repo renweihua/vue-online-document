@@ -19,7 +19,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="logout">退出登陆</el-dropdown-item>
-            <el-dropdown-item command="myCenter">个人中心</el-dropdown-item>
+            <el-dropdown-item command="user">个人中心</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -78,14 +78,14 @@ export default {
     },
     //到个人中心
     goToUserCenter() {
-      this.$router.push({ name: "myCenter" }).catch(() => {});
+      this.$router.push({ name: "user" }).catch(() => {});
     },
     handleCommand(command) {
       if (command == "logout") {
         this.loginOut();
         return;
       }
-      if (command == "myCenter") {
+      if (command == "user") {
         this.goToUserCenter();
         return;
       }

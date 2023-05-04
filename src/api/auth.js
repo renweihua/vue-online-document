@@ -7,3 +7,11 @@ export async function login(data) {
         data
     })
 }
+
+export async function me(data) {
+    return await request({
+        url: '/auth/me',
+        method: 'post',
+        data
+    })
+}

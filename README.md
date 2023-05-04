@@ -17,6 +17,7 @@ yarn build
 ## package image
 yarn config set sass_binary_site http://cdn.npm.taobao.org/dist/node-sass -g
 yarn config set registry https://registry.npm.taobao.org -g
+
 ### look config
 yarn config get registry
 
@@ -24,6 +25,7 @@ yarn config get registry
 ### 功能列表
 - Auth
 	- [X] 登录
+	- [X] 登录会员信息 /api/auth/me
 - 项目管理 
 	- [X] 列表
 	- [X] 详情
@@ -35,6 +37,7 @@ yarn config get registry
 	- [X] 详情
 	- [X] 创建
 	- [X] 编辑
+	- [X] 复制
 	- 删除
 - 文档管理 
 	- [X] 列表

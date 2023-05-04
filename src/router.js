@@ -51,9 +51,9 @@ const router = new VueRouter({
 							name: "userManager"
 						},
 						{
-							path: "/myCenter",
+							path: "/user",
 							component: resolve => require(['@/view/user/myCenter'], resolve),
-							name: "myCenter"
+							name: "user"
 						},
 					]
 				},
