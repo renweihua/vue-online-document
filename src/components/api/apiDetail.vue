@@ -8,53 +8,48 @@
 			</div>
 		</div>
 		<!-- api信息 -->
-		<div class="api-detail-info">
-			<em v-if="apiData.group_id">
-				分组:
-				<i>{{apiData.group.group_name}}</i>
-			</em>
-			<el-divider direction="vertical"></el-divider>
-			<em>
-				请求协议:
-				<i>{{apiData.http_protocol ? apiData.http_protocol : 'unknown'}}</i>
-			</em>
-			<el-divider direction="vertical"></el-divider>
-			<em>
-				请求方式:
-				<i>{{apiData.http_method ? apiData.http_method : 'unknown'}}</i>
-			</em>
-			<el-divider direction="vertical"></el-divider>
-			<i>{{apiData.api_url ? apiData.api_url : 'unknown'}}</i>
-			<el-divider direction="vertical"></el-divider>
-
-			<i>{{apiData.api_name ? apiData.api_name : 'unknown'}}</i>
+		<div>
+			<h4><span style="color:red;font-weight: bold;">|</span> 基本信息</h4>
+			<el-descriptions :column="1" >
+				<el-descriptions-item v-if="apiData.group_id" label="分组 ">{{ apiData.group.group_name }}</el-descriptions-item>
+				<el-descriptions-item label="API名称 ">{{ apiData.api_name }}</el-descriptions-item>
+				<el-descriptions-item label="请求协议 ">{{ apiData.http_protocol }}</el-descriptions-item>
+				<el-descriptions-item label="URL ">
+					<el-tag size="small">{{ apiData.http_method }}</el-tag>
+					{{ apiData.api_url }}
+				</el-descriptions-item>
+			</el-descriptions>
 		</div>
 		<!-- api信息-结束 -->
-		<p style="font-size:14px;" v-if="apiData.api_description">{{ apiData.api_description }}</p>
+		<div class="content-item" v-if="apiData.api_description">
+			<h4><span style="color:red;font-weight: bold;">|</span> API描述</h4>
+			<p style="font-size:14px;" v-if="apiData.api_description">{{ apiData.api_description }}</p>
+		</div>
 		<!-- 请求头信息 -->
 		<div class="content-item" v-if="apiData.http_header && apiData.http_header[0]">
-			<table>
-				<tr>
-					<td colspan="2" style="text-align:center;">请求头</td>
-				</tr>
-				<tr>
-					<th>头</th>
-					<th>值</th>
-				</tr>
-				<tbody>
-					<tr v-for="(item,index) in apiData.http_header" :key="index">
-						<td>{{item.name}}</td>
-						<td>{{item.content}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<h4><span style="color:red;font-weight: bold;">|</span> Header 请求参数</h4>
+			<el-table
+			    :data="apiData.http_header"
+			    border
+			    style="width: 100%">
+			    <el-table-column prop="name" header-align="center"label="参数名">
+			    </el-table-column>
+			    <el-table-column prop="value" header-align="center" label="参数值">
+			    </el-table-column>
+			    <el-table-column prop="required" align="center" label="是否必填">
+			      	<template slot-scope="scope">
+			      		{{ scope.row.required ? '是' : '否'}}
+			      	</template>
+			    </el-table-column>
+			    <el-table-column prop="type" label="参数类型" align="center">
+			    </el-table-column>
+			    <el-table-column prop="description" label="描述说明" align="center">
+			    </el-table-column>
+			</el-table>
 		</div>
 		<!-- 请求头信息-结束 -->
 		<!-- 参数信息-start -->
-		<div class="content-item" v-if="apiData.http_params && apiData.http_params[0]">
-			<div @click="copyAsPostman()" style="margin:5px 0;">
-				<el-button size="mini">生成调试参数</el-button>
-			</div>
+		<div class="content-item" v-if="apiData.http_params && apiData.http_params[0]" style="position: relative;">
 			<!-- 对话框 -->
 			<el-dialog title="复制到剪贴板" :visible.sync="dialogFormVisible" width="30%">
 				<el-form>
@@ -74,74 +69,70 @@
 				</el-form>
 			</el-dialog>
 
-			<table>
-				<tr>
-					<td colspan="5" style="text-align:center;">请求参数</td>
-				</tr>
-				<tr>
-					<th>参数</th>
-					<th>示例</th>
-					<th>必填</th>
-					<th>类型</th>
-					<th>说明</th>
-				</tr>
-				<tbody>
-					<tr v-for="(item,index) in apiData.http_params" :key="index">
-						<td>{{item.name}}</td>
-						<td>{{item.value}}</td>
-						<td>{{item.required}}</td>
-						<td>{{item.type}}</td>
-						<td>{{item.description}}</td>
-					</tr>
-				</tbody>
-			</table>
+			<h4><span style="color:red;font-weight: bold;">|</span> 请求参数</h4>
+			<div @click="copyAsPostman()" style="margin:5px 0;position: absolute;top: -8px;left: 100px;cursor: pointer;">
+				<el-tag size="medium">生成调试参数</el-tag>
+			</div>
+			<el-table
+			    :data="apiData.http_params"
+			    border
+			    style="width: 100%">
+			    <el-table-column prop="name" header-align="center"label="参数名">
+			    </el-table-column>
+			    <el-table-column prop="value" header-align="center" label="参数值">
+			    </el-table-column>
+			    <el-table-column prop="required" align="center" label="是否必填">
+			      	<template slot-scope="scope">
+			      		{{ scope.row.required ? '是' : '否'}}
+			      	</template>
+			    </el-table-column>
+			    <el-table-column prop="type" label="参数类型" align="center">
+			    </el-table-column>
+			    <el-table-column prop="description" label="描述说明" align="center">
+			    </el-table-column>
+			</el-table>
 		</div>
 		<!-- 参数信息-end -->
 
 		<!-- 响应 -->
 		<div class="content-item" v-show="apiData.response_params && apiData.response_params[0]">
-			<table>
-				<tr>
-					<td colspan="5" style="text-align:center;">响应信息</td>
-				</tr>
-				<tr>
-					<th>字段</th>
-					<th>类名</th>
-					<th>必含</th>
-					<th>类型</th>
-					<th>说明</th>
-				</tr>
-				<tbody v-if=" apiData.response_params && apiData.response_params[0]">
-					<tr v-for="(item,index) in apiData.response_params" :key="index">
-						<td>{{item.field_name}}</td>
-						<td>{{item.field_value}}</td>
-						<td>{{item.required}}</td>
-						<td>{{item.type}}</td>
-						<td>{{item.description}}</td>
-					</tr>
-				</tbody>
-				<tbody v-else>
-					<tr>
-						<td colspan="5">无</td>
-					</tr>
-				</tbody>
-			</table>
+			<h4><span style="color:red;font-weight: bold;">|</span> 响应信息</h4>
+			<el-table
+			    :data="apiData.response_params"
+			    border
+			    style="width: 100%">
+			    <el-table-column prop="name" header-align="center"label="参数名">
+			    </el-table-column>
+			    <el-table-column prop="value" header-align="center" label="参数值">
+			    </el-table-column>
+			    <el-table-column prop="required" align="center" label="是否必填">
+			      	<template slot-scope="scope">
+			      		{{ scope.row.required ? '是' : '否'}}
+			      	</template>
+			    </el-table-column>
+			    <el-table-column prop="type" label="参数类型" align="center">
+			    </el-table-column>
+			    <el-table-column prop="description" label="描述说明" align="center">
+			    </el-table-column>
+			</el-table>
 		</div>
 		<!-- 响应-结束 -->
 
 		<div class="content-item">
-			<div v-if="apiData.response_sample">
-				<h5>响应数据示例</h5>
+			<div v-if="apiData.response_sample && apiData.response_sample.success && apiData.response_sample.failed">
+				<h4><span style="color:red;font-weight: bold;">|</span> 响应示例</h4>
 
-				<h5 v-show=" apiData.response_sample.success">成功</h5>
-				<pre v-show="apiData.response_sample.success" v-html="syntaxHighlight(apiData.response_sample.success)"></pre>
-				<json-viewer :value="apiData.response_sample.success" copyable theme="my-awesome-json-theme"></json-viewer>
+				<div v-if="apiData.response_sample.success && Object.keys(apiData.response_sample.success).length > 0">
+					<h5 v-show="apiData.response_sample.success">成功</h5>
+					<pre v-show="apiData.response_sample.success" v-html="syntaxHighlight(apiData.response_sample.success)"></pre>
+					<!--
+					<json-viewer :value="apiData.response_sample.success" copyable theme="my-awesome-json-theme"></json-viewer>
+					-->
+				</div>
 
-
-				<div v-if="apiData.response_sample.failed">
+				<div v-if="apiData.response_sample.failed && Object.keys(apiData.response_sample.failed).length > 0">
 					<h5 v-show="apiData.response_sample.failed">失败</h5>
 					<pre v-show="apiData.response_sample.failed" v-html="syntaxHighlight(apiData.response_sample.failed)"></pre>
-					<json-viewer :value="apiData.response_sample.failed" copyable theme="my-awesome-json-theme"></json-viewer>
 				</div>
 			</div>
 		</div>
@@ -211,7 +202,7 @@
 					this.copyStr +=
 						value.name +
 						this.delimiter +
-						(value.example ? value.example : "unknown") +
+						(value.value ? value.value : "unknown") +
 						"\r\n";
 				}
 			},
@@ -288,7 +279,7 @@
 
 			em {
 				font-style: normal;
-				font-size: 12px;
+				font-size: 15px;
 				font-weight: 700;
 				margin-right: 5px;
 				min-width: 100px;
@@ -297,7 +288,7 @@
 
 			span {
 				font-style: normal;
-				font-size: 12px;
+				font-size: 15px;
 				font-weight: 700;
 				display: inline-block;
 				text-align: center;
@@ -316,14 +307,13 @@
 
 		.content-item {
 			margin: 10px 0;
-			padding: 10px 8px;
 			box-sizing: border-box;
 			border-radius: 6px;
 
 			table {
 				border-collapse: collapse;
 				font-size: 14px;
-		    	display: block;
+		    	// display: block;
 			    width: 100%;
 			    overflow: auto;
 

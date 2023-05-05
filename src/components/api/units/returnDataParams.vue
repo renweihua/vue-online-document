@@ -16,26 +16,26 @@
 			</header>
 			<table>
 				<tr>
-					<th>字段名</th>
-					<th>字段值</th>
+					<th>参数名</th>
+					<th>参数值</th>
 					<th>必含</th>
 					<th>类型</th>
-					<th>说明</th>
+					<th>描述说明</th>
 					<th>操作</th>
 				</tr>
 				<tr v-for="(item,index) in returnDataItem" :key="item.id">
 					<td>
-						<input type="text" placeholder="字段名" v-model="item.field_name"
+						<input type="text" placeholder="参数名" v-model="item.name"
 							v-on:input="dataInput(index,$event)" />
 					</td>
 					<td>
-						<input type="text" placeholder v-model="item.field_value" />
+						<input type="text" placeholder="参数值" v-model="item.value" />
 					</td>
 					<td>
 						<input type="checkbox" name id v-model="item.required" />
 					</td>
 					<td>
-						<el-select v-model="item.field_type" placeholder="请设置字段类型">
+						<el-select v-model="item.type" placeholder="请设置字段类型">
 							<el-option-group
 								v-if="propertyList && propertyList.field_type"
 				                v-for="(group, index) in propertyList.field_type"
@@ -47,7 +47,7 @@
 						</el-select>
 					</td>
 					<td>
-						<input type="text" placeholder="参数名" v-model="item.description" />
+						<input type="text" v-model="item.description" />
 					</td>
 					<td>
 						<div>
@@ -72,9 +72,9 @@
 			return {
 				dialogFormVisible: false,
 				returnDataItem: [{
-					field_name: "",
-					field_value: "",
-					field_type: "string",
+					name: "",
+					value: "",
+					type: "string",
 					description: "",
 					required: false,
 					handle: true,
@@ -111,22 +111,22 @@
 				this.returnDataItem = [];
 				for (let item of items) {
 					this.returnDataItem.push({
-						field_name: item,
-						field_value: "",
+						name: item,
+						value: "",
 						description: "",
 						required: true,
-						field_type: "string",
+						type: "string",
 						handle: true,
 						is_add: false,
 					});
 				}
 
 				this.returnDataItem.push({
-					field_name: "",
-					field_value: "",
+					name: "",
+					value: "",
 					description: "",
 					required: true,
-					field_type: "string",
+					type: "string",
 					handle: true,
 					is_add: false,
 				});
@@ -160,11 +160,11 @@
 					let txt = event.target.value;
 					if (txt.length >= 1 && this.returnDataItem[index].is_add === false) {
 						this.returnDataItem.push({
-							field_name: "",
-							field_value: "",
+							name: "",
+							value: "",
 							description: "",
 							required: false,
-							field_type: "string",
+							type: "string",
 							handle: true,
 							is_add: false,
 						});

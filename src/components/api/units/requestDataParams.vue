@@ -8,8 +8,11 @@
 			</div>
 			<table v-show="show==0">
 				<tr>
-					<th>请求头名</th>
-					<th>值</th>
+					<th>参数名</th>
+					<th>参数值</th>
+					<th>必填</th>
+					<th>参数类型</th>
+					<th>描述说明</th>
 					<th>操作</th>
 				</tr>
 				<tr v-for="(item,index) in apiParamHeaderItem" :key="item.id">
@@ -18,10 +21,28 @@
 							v-on:input="apiParamHeaderInput(index, $event)" class="content" />
 					</td>
 					<td>
-						<input class="content" type="text" placeholder="值" v-model="item.content" />
+						<input class="content" type="text" placeholder="参数值" v-model="item.value" />
 					</td>
 					<td>
-						<el-button size="small" v-if="item.content.length >= 1" icon="el-icon-delete"
+						<input type="checkbox" name id v-model="item.required" />
+					</td>
+					<td>
+						<el-select v-model="item.type" placeholder="请设置字段类型">
+							<el-option-group
+								v-if="propertyList && propertyList.field_type"
+				                v-for="(group, index) in propertyList.field_type"
+				                :key="index"
+				                :label="group.label"
+				            >
+                            	<el-option v-for="item in group.options" :key="item" :label="item" :value="item"></el-option>
+                            </el-option-group>
+						</el-select>
+					</td>
+					<td>
+						<input class="content" type="text" placeholder v-model="item.description" />
+					</td>
+					<td>
+						<el-button size="small" v-if="item.value.length >= 1" icon="el-icon-delete"
 							@click="apiParamHeaderDelete(index)" plain></el-button>
 					</td>
 				</tr>
@@ -33,8 +54,8 @@
 					<th>参数名</th>
 					<th>参数值</th>
 					<th>必填</th>
-					<th>类型</th>
-					<th>参数描述</th>
+					<th>参数类型</th>
+					<th>描述说明</th>
 					<th>操作</th>
 				</tr>
 				<tr v-for="(item,index) in apiParamItem" :key="item.id">
@@ -114,7 +135,10 @@
 				show: 1,
 				apiParamHeaderItem: [{
 					name: "",
-					content: "",
+					value: "",
+					description: "",
+					required: true,
+					type: "string",
 					handle: true,
 					is_add: false,
 				}, ],
@@ -135,7 +159,10 @@
 					this.apiParamHeaderItem = JSON.parse(JSON.stringify(val));
 					this.apiParamHeaderItem.push({
 						name: "",
-						content: "",
+						value: "",
+						description: "",
+						required: true,
+						type: "string",
 						handle: true,
 						is_add: false,
 					});
@@ -189,7 +216,10 @@
 					if (txt.length >= 1 && this.apiParamHeaderItem[index].is_add === false) {
 						this.apiParamHeaderItem.push({
 							name: "",
-							content: "",
+							value: "",
+							description: "",
+							required: true,
+							type: "string",
 							handle: true,
 							is_add: false,
 						});
