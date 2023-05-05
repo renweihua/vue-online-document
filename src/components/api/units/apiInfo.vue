@@ -105,7 +105,7 @@
 					project_id: 0, //项目Id
 					protocol_type: "", //协议
 					http_protocol: "", //http请求方法
-					http_return_type: "", //返回值类型
+					http_status: 200, //返回值类型
 					url: "", //http请求URL
 					api_name: "", //接口名称
 					develop_language: "", // 接口开发语言
@@ -134,8 +134,8 @@
 							case "http_protocol":
 								this.apiInfo.http_protocol = val[item][0];
 								break;
-							case "http_return":
-								this.apiInfo.http_return_type = val[item][0];
+							case "http_status":
+								this.apiInfo.http_status = val[item][0];
 								break;
 						}
 					}
