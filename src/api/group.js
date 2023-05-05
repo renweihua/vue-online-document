@@ -34,6 +34,14 @@ export async function update(data) {
     })
 }
 
+export async function batchSave(data) {
+    return await request({
+        url: `/group/batch-save`,
+        method: 'put',
+        data
+    })
+}
+
 export async function deleteDoc(data) {
     return await request({
         url: `/group-delete`,

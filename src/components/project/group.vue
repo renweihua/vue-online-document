@@ -126,7 +126,8 @@
 	import {
 		lists,
 		create,
-		update
+		update,
+		batchSave
 	} from "@/api/group";
 
 	const CODE_OK = 200;
@@ -354,33 +355,110 @@
 				if (!value) return true;
 				return data.label.indexOf(value) !== -1;
 			},
+			// 	节点开始拖拽时触发的事件
 			handleDragStart(node, ev) {
-				console.log('drag start', node);
+				// console.log('drag start', node);
 			},
+			// 拖拽进入其他节点时触发的事件
 			handleDragEnter(draggingNode, dropNode, ev) {
-				console.log('tree drag enter: ', dropNode.label);
+				// console.log('tree drag enter: ', dropNode.label);
 			},
+			// 拖拽离开某个节点时触发的事件
 			handleDragLeave(draggingNode, dropNode, ev) {
-				console.log('tree drag leave: ', dropNode.label);
+				// console.log('tree drag leave: ', dropNode.label);
 			},
+			// 在拖拽节点时触发的事件（类似浏览器的 mouseover 事件）
 			handleDragOver(draggingNode, dropNode, ev) {
-				console.log('tree drag over: ', dropNode.label);
+				// console.log('tree drag over: ', dropNode.label);
 			},
+			// 拖拽结束时（可能未成功）触发的事件
 			handleDragEnd(draggingNode, dropNode, dropType, ev) {
-				console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+				// console.log('tree drag end: ', dropNode && dropNode.label, dropType);
 			},
-			handleDrop(draggingNode, dropNode, dropType, ev) {
-				console.log('tree drop: ', dropNode.label, dropType);
-			},
-			allowDrop(draggingNode, dropNode, type) {
-				if (dropNode.data.label === '二级 3-1') {
-					return type !== 'inner';
-				} else {
-					return true;
+			// 拖拽成功完成时触发的事件
+			async handleDrop(draggingNode, dropNode, dropType, ev) {
+				// console.log('tree drop: ', dropNode.label, dropType);
+				console.log(dropType);
+				// 如果拖到到前后则属于同级
+				let parent_id = dropNode.data.parent_id || 0;
+					// 当前分组Id
+				let group_id = dropNode.data.group_id;
+
+				// 设置排序值
+				if(dropType == 'before'){
+					// draggingNode 及之后的其它同级分组都需要 + 1
+					draggingNode.data.sort += 1;
+					// 当前分组Id
+					group_id = draggingNode.data.group_id;
+				}else if(dropType == 'after'){
+					// dropNode 及之后的其它同级分组都需要 + 1
+					dropNode.data.sort += 1;
+				}else if(dropType == 'inner'){
+					// 如果拖到到内部，则父级Id为指定的分组Id
+					parent_id = dropNode.data.group_id;
+					// 当前分组Id，且相关的同级排序要按照重排一次！
+					group_id = draggingNode.data.group_id;
+				}
+				// 设置当前分组的父级Id
+				draggingNode.data.parent_id = parent_id;
+				// 进行排序逻辑
+				this.groups = this.setGroupConfigs(this.groups, group_id, dropType);
+				// 分组数据是同步更新的
+				// 提取一下分组与对应的排序及父级Id
+				let groups = this.getGroupTreeConfis(this.groups);
+				// 批量更新
+				const {
+					data,
+					http_status,
+					msg
+				} = await batchSave({groups});
+
+				if (http_status === this.HTTP_SUCCESS) {
+					this.$message.success(msg);
 				}
 			},
+			// 设置分组的排序与父级归属
+			setGroupConfigs(groups, group_id, dropType){
+				let parent_id = -1;
+				let sort;
+				groups.map((item)=>{
+					if(item.group_id == group_id){
+						parent_id = item.parent_id;
+						sort = item.sort;
+					}
+					// 同级分组，则设置sort
+					else if(item.parent_id == parent_id && item.group_id != group_id){
+						++sort;
+						item.sort = sort;
+					}
+					if(item._child !== undefined){
+						item._child = this.setGroupConfigs(item._child, group_id, dropType);
+					}
+				});
+				return groups;
+			},
+			getGroupTreeConfis(groups){
+				let configs = [];
+				groups.map((item)=>{
+					configs.push({
+						group_id: item.group_id,
+						group_name: item.group_name,
+						parent_id: item.parent_id,
+						sort: item.sort,
+					});
+					if(item._child !== undefined){
+						configs = configs.concat(this.getGroupTreeConfis(item._child));
+					}
+				});
+				return configs;
+			},
+			// 拖拽时判定目标节点能否被放置
+			allowDrop(draggingNode, dropNode, type) {
+				return true;
+			},
+			// 判断节点是否可拖拽
 	      	allowDrag(draggingNode) {
-	        	return draggingNode.data.label.indexOf('三级 3-2-2') === -1;
+	      		return true;
 	      	}
 		},
 		watch: {
