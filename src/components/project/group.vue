@@ -150,7 +150,7 @@
 		},
 		created() {
 			if (this.groups.length < 1) {
-				this.getGroup(this.curr, this.$route.params.projectId);
+				this.getGroup(this.$route.params.projectId);
 			}
 		},
 		data() {
@@ -192,13 +192,12 @@
 				this.form.parent_id = item[item.length - 1];
 			},
 			//获取分组列表
-			async getGroup(curr, projectId) {
+			async getGroup(projectId) {
 				const {
 					data,
 					http_status,
 					msg
 				} = await lists({
-					page: curr,
 					group_type: this.type,
 					project_id: projectId ? projectId : 0,
 				});
@@ -248,7 +247,6 @@
 									this.$message.error("操作失败");
 								}
 								this.getGroup(
-									this.curr,
 									this.$route.params.projectId
 								);
 							});
@@ -285,8 +283,6 @@
 
 					// 重新加载分组
 					this.getGroup(
-						this.pageSize,
-						this.curr,
 						this.$route.params.projectId
 					);
 				}
@@ -311,8 +307,6 @@
 				}
 
 				this.getGroup(
-					this.pageSize,
-					this.curr,
 					this.$route.params.projectId
 				);
 
@@ -464,7 +458,7 @@
 		watch: {
 			$route: function(to) {
 				if (to.params.groupId == 0) {
-					this.getGroup(this.pageSize, this.curr, this.$route.params.projectId);
+					this.getGroup(this.$route.params.projectId);
 				}
 			},
 			filterText(val) {
