@@ -3,23 +3,23 @@
 		<div class="right-l">
 			<div class="info-box">
 				<div class="title">
-					<span>{{projectData.project_name}}</span>
+					<span>{{project.project_name}}</span>
 				</div>
 				<div class="desc">
-					<span>{{projectData.project_description}}</span>
+					<span>{{project.project_description}}</span>
 				</div>
 				<ul>
 					<li>
 						<p>项目类型</p>
-						<p>{{projectData.project_type_text}}</p>
+						<p>{{project.project_type_text}}</p>
 					</li>
 					<li>
 						<p>项目版本</p>
-						<p>{{projectData.project_version}}</p>
+						<p>{{project.project_version}}</p>
 					</li>
 					<li>
 						<p>创建时间</p>
-						<p>{{projectData.time_formatting}}</p>
+						<p>{{project.time_formatting}}</p>
 					</li>
 					<li @click="jump()" class="api-detail">
 						<p>api接口</p>
@@ -50,27 +50,30 @@
 
 <script>
 	import Message from "@/components/project/operationLog";
-	import {
-		getProjectDetail
-	} from "@/api/project"
+	import getProjectDetail from "@/mixins/getProjectDetail";
 	import {
 		lists as docs
-	} from "@/api/doc"
+	} from "@/api/doc";
 
 	export default {
 		name: "detailPage",
 		props: {
 			projectId: String,
 		},
+		mixins: [getProjectDetail],
 		created() {
-			this.getDetail();
+			// this.project = this.$store.state.project;
 			this.getDocList();
+		},
+		mounted(){
+			this.getProjectById(this.$route.params.projectId);
+			this.project = this.$store.state.project;
 		},
 		data() {
 			return {
 				loading: false,
 				keyword: "",
-				projectData: {},
+				project: {},
 				docList: [],
 				indesideRoute: [{
 						title: "项目概况",
@@ -93,16 +96,6 @@
 						docId: row.id
 					}
 				});
-			},
-			//获取项目详情
-			async getDetail() {
-				const {data, http_status, msg} = await getProjectDetail(this.$route.params.projectId);
-                if (http_status === this.HTTP_SUCCESS) {
-                    this.projectData = data;
-                    this.$store.commit("saveProject", data);
-                } else {
-                    this.$message.error(msg);
-                }
 			},
 			jump() {
 				this.$router.push({
