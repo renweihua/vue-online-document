@@ -22,6 +22,9 @@ yarn config set registry https://registry.npm.taobao.org -g
 yarn config get registry
 
 
+### 示例
+![API详情](./public/demo/api-detail.jpg)
+
 ### 功能列表
 - Auth
 	- [X] 登录
