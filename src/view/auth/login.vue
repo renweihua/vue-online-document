@@ -77,6 +77,9 @@
                                     this.$router.push("/login").catch(() => {});
                                 }
                                 this.loading = false;
+                            },
+                            () => {
+                                this.loading = false;
                             }
                         );
                     } else {
