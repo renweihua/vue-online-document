@@ -32,7 +32,7 @@
         mixins: [getProjectDetail],
 		props: {},
         created() {
-            this.getProjectById(this.$route.params.projectId);
+        	if(this.$route.params.projectId) this.getProjectById(this.$route.params.projectId);
         },
         data() {
             return {
