@@ -12,13 +12,21 @@
 				<el-table-column prop="time_formatting" label="创建时间"></el-table-column>
 				<el-table-column prop label="操作">
 					<template slot-scope="scope">
+						<!--
 						<el-button type="info" @click.stop="detail(scope.row);">详情</el-button>
 						<el-divider direction="vertical"></el-divider>
-						<el-button type="primary" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;"
-							:disabled="$store.state.userInfo.type == 1">编辑</el-button>
+						<el-button type="primary" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;">编辑</el-button>
 						<el-divider direction="vertical"></el-divider>
 						<el-button type="danger" slot="reference" @click.stop="deleteData(scope.row)"
-							:disabled="$store.state.userInfo.type == 1">删除</el-button>
+							disabled="true">删除</el-button>
+						-->
+
+
+						<el-link type="info" icon="el-icon-view" @click.stop="detail(scope.row)">详情</el-link>
+						<el-divider direction="vertical"></el-divider>
+						<el-link type="primary" icon="el-icon-edit" @click.stop="form = scope.row;dialogFormVisible = true; isUpdate = true;">编辑</el-link>
+						<el-divider direction="vertical"></el-divider>
+						<el-link type="danger" icon="el-icon-delete" @click.stop="deleteData(scope.row)">删除</el-link>
 					</template>
 				</el-table-column>
 			</el-table>

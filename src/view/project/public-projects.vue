@@ -12,7 +12,10 @@
 						<div class="text item" v-html="item.project_description"></div>
 						<div class="bottom clearfix">
 							<time class="time">{{ item.time_formatting }}</time>
+							<!--
 							<el-button type="text" class="button" @click.stop="detail(item);">查看</el-button>
+							-->
+							<el-link type="info" icon="el-icon-view" @click.stop="detail(scope.row)">查看</el-link>
 						</div>
 					</el-card>
 				</div>
