@@ -10,7 +10,7 @@ export async function lists(data) {
 
 export async function getProjectDetail(project_id) {
     return await request({
-        url: `/project-detail`,
+        url: `/project/detail`,
         method: 'get',
         params: {
             project_id
@@ -20,7 +20,7 @@ export async function getProjectDetail(project_id) {
 
 export async function create(data) {
     return await request({
-        url: `/project-create`,
+        url: `/project/create`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/project-update`,
+        url: `/project/update`,
         method: 'put',
         data
     })

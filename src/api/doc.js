@@ -10,7 +10,7 @@ export async function lists(params) {
 
 export async function detail(doc_id) {
     return await request({
-        url: `/doc-detail`,
+        url: `/doc/detail`,
         method: 'get',
         params: {
             doc_id
@@ -20,7 +20,7 @@ export async function detail(doc_id) {
 
 export async function create(data) {
     return await request({
-        url: `/doc-create`,
+        url: `/doc/create`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/doc-update`,
+        url: `/doc/update`,
         method: 'put',
         data
     })

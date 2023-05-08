@@ -10,7 +10,7 @@ export async function lists(params) {
 
 export async function detail(doc_id) {
     return await request({
-        url: `/group-detail`,
+        url: `/group/detail`,
         method: 'get',
         params: {
             doc_id
@@ -20,7 +20,7 @@ export async function detail(doc_id) {
 
 export async function create(data) {
     return await request({
-        url: `/group-create`,
+        url: `/group/create`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/group-update`,
+        url: `/group/update`,
         method: 'put',
         data
     })
@@ -44,7 +44,7 @@ export async function batchSave(data) {
 
 export async function deleteDoc(data) {
     return await request({
-        url: `/group-delete`,
+        url: `/group/delete`,
         method: 'delete',
         data
     })

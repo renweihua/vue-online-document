@@ -10,7 +10,7 @@ export async function lists(params) {
 
 export async function detail(api_id) {
     return await request({
-        url: `/api-detail`,
+        url: `/api/detail`,
         method: 'get',
         params: {
             api_id
@@ -20,7 +20,7 @@ export async function detail(api_id) {
 
 export async function create(data) {
     return await request({
-        url: `/api-create`,
+        url: `/api/create`,
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export async function create(data) {
 
 export async function update(data) {
     return await request({
-        url: `/api-update`,
+        url: `/api/update`,
         method: 'put',
         data
     })
@@ -36,7 +36,7 @@ export async function update(data) {
 
 export async function deleteApi(data) {
     return await request({
-        url: `/api-delete`,
+        url: `/api/delete`,
         method: 'delete',
         data
     })
