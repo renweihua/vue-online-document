@@ -27,14 +27,17 @@
 				</el-table-column>
 				<el-table-column align="center" label="操作">
 					<template slot-scope="scope">
-						<el-dropdown placement="bottom" trigger="click" @command="handleCommand">
-							<el-button type="primary">权限设置</el-button>
-							<el-dropdown-menu slot="dropdown">
-								<el-dropdown-item :command="{action:'setPermission',data:scope.row}">
-									设置{{scope.row.role_power == 1 ? '只读' : '读/写'}}</el-dropdown-item>
-							</el-dropdown-menu>
-						</el-dropdown>
-						<el-button type="danger" style="margin-left:10px" @click="quitProject(scope.row)">移出项目</el-button>
+						<el-link v-if="scope.row.is_leader == 1" icon="el-icon-s-custom" type="primary" @click.stop="setLeaderHandle(scope.row)">设为`普通成员`</el-link>
+						<el-link v-else icon="el-icon-s-custom" type="primary" @click.stop="setLeaderHandle(scope.row)">设为`管理员`</el-link>
+
+						<el-divider direction="vertical"></el-divider>
+
+						<el-link v-if="scope.row.role_power == 1" icon="el-icon-setting" type="primary" @click.stop="setPermission(scope.row)">设为`只读`权限</el-link>
+						<el-link v-else icon="el-icon-setting" type="primary" @click.stop="setPermission(scope.row)">设为`读/写`权限</el-link>
+
+						<el-divider direction="vertical"></el-divider>
+
+						<el-link type="danger" icon="el-icon-delete" @click.stop="quitProject(scope.row)">移出成员</el-link>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -46,7 +49,7 @@
 <script>
 	const CODE_OK = 200;
 	import { searchUsers } from '@/api/commom';
-	import { lists, create, update, deleteMember, setRolePower } from '@/api/project-member'
+	import { lists, create, update, deleteMember, setRolePower, setLeader } from '@/api/project-member'
 
 	export default {
 		name: "members",
@@ -82,16 +85,6 @@
 
 				return str;
 			},
-			handleCommand(val) {
-				switch (val.action) {
-					case "setPermission":
-						this.setPermission(val.data);
-						break;
-
-					default:
-						break;
-				}
-			},
 			//获取项目用户列表
 			async getProjectUserList() {
 				const {data, http_status, msg} = await lists({
@@ -124,6 +117,32 @@
 					})
 					.catch(() => {});
 			},
+			// 设置成员的管理员权限
+			setLeaderHandle(val) {
+				let is_leader = val.is_leader == 0 ? 1 : 0;
+				is_leader = Number.parseInt(is_leader);
+				this.$confirm("您将调整会员`" + val.user_info.nick_name + "`的管理员权限?", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						type: "warning",
+					})
+					.then(() => {
+						setLeader({
+								project_id: this.$route.params.projectId,
+								user_id: val.user_id,
+								is_leader: is_leader,
+							})
+							.then(
+								(res) => {
+									if (res.http_status === this.HTTP_SUCCESS) {
+										this.$message.success(res.msg);
+										val.is_leader = is_leader;
+									}
+								}
+							);
+					})
+					.catch(() => {});
+			},
 			//设置用户对项目的读写权限
 			setPermission(val) {
 				let role_power = val.role_power == 0 ? 1 : 0;
@@ -143,7 +162,7 @@
 								(res) => {
 									if (res.http_status === this.HTTP_SUCCESS) {
 										this.$message.success(res.msg);
-										this.getProjectUserList();
+										val.role_power = role_power;
 									}
 								}
 							);

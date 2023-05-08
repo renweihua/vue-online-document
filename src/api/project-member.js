@@ -50,3 +50,11 @@ export async function setRolePower(data) {
     })
 }
 
+export async function setLeader(data) {
+    return await request({
+        url: `/project-member/set-leader`,
+        method: 'patch',
+        data
+    })
+}
+

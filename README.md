@@ -29,6 +29,7 @@ yarn config get registry
 - Auth
 	- [X] 登录
 	- [X] 登录会员信息 /api/auth/me
+- [ ] 项目内的权限验证
 - 分组管理
     - [X] 列表
     - [X] 创建
@@ -66,5 +67,6 @@ yarn config get registry
     - [X] 编辑
     - [X] 删除
     - [X] 权限设置
+    - [X] 设置成员的管理员权限 /api/project-member/set-leader
 - 操作日志
 	- [X] 列表 /api/operation-logs
