@@ -17,7 +17,7 @@
 					<template slot-scope="scope">
 						<el-button @click="jumpPage('docDetail',scope.row.doc_id)">详情</el-button>
 						<el-button @click="jumpPage('docEdit',scope.row.doc_id)" :disabled="!controlShow()">编辑</el-button>
-						<el-button type="danger" @click="deleteDoc(scope.row.doc_id)" :disabled="!controlShow()">删除
+						<el-button type="danger" @click="deleteDocProcess(scope.row)" :disabled="!controlShow()">删除
 						</el-button>
 					</template>
 				</el-table-column>
@@ -34,8 +34,9 @@
 	import controlShow from "../../mixins/controlShow";
 	import {
 		lists,
-		setTop
-	} from "@/api/doc"
+		setTop,
+		deleteDoc
+	} from "@/api/doc";
 
 	const CODE_OK = 200;
 	export default {
@@ -71,21 +72,24 @@
 				this.cp = event;
 			},
 			//删除文档
-			deleteDoc(id) {
-				this.$confirm("该文档将被删除, 是否继续?", "提示", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
-					type: "warning",
-				}).then(() => {
-					this.$http
-						.post("/doc/delete", {
-							id: id,
-							projectId: this.$route.params.projectId,
+			deleteDocProcess(item) {
+				this.$confirm(
+					'确定要删除文档`' + item.doc_name + '`?<br>\r\n\n <strong><span style="color: #f56c6c;">删除之后将无法恢复，请谨慎操作！</span></strong>',
+					"提示",
+					{
+						dangerouslyUseHTMLString: true,
+						confirmButtonText: "确定",
+						cancelButtonText: "取消",
+						type: "warning",
+					}
+				).then(() => {
+					deleteDoc({
+							doc_id: item.doc_id
 						})
-						.then((response) => {
-							response = response.data;
-							if (response.code === CODE_OK) {
-								this.$message.success("成功!");
+						.then((res) => {
+							if (res.http_status === this.HTTP_SUCCESS) {
+								this.$message.success(res.msg);
+
 								//如果当前页只有1条数据则请求上一页
 								if (this.docList.length === 1 && this.cp > 1) {
 									this.cp--;
@@ -96,8 +100,6 @@
 									this.groupId,
 									this.$route.params.projectId
 								);
-							} else {
-								this.$message.error("操作失败!");
 							}
 						});
 				});

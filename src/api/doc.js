@@ -45,7 +45,7 @@ export async function setTop(data) {
 
 export async function deleteDoc(data) {
     return await request({
-        url: `/doc-delete`,
+        url: `/doc/delete`,
         method: 'delete',
         data
     })
