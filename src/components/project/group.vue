@@ -63,8 +63,10 @@
 						<el-dropdown-item v-if="data.default_expand == 0" icon="el-icon-open" :command="{action:'default_expand',item:data, node:node}">默认打开子节点</el-dropdown-item>
 						<el-dropdown-item v-else icon="el-icon-turn-off" :command="{action:'default_expand',item:data, node:node}">默认关闭子节点</el-dropdown-item>
 
-						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',item:data}">上移</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data}">下移</el-dropdown-item>
+						<!-- 支持拖动排序，无需单个设置！
+						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',item:data, node:node}">上移</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data, node:node}">下移</el-dropdown-item>
+						-->
 
 						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data, node:node}">编辑</el-dropdown-item>
 						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'delete',item:data, node:node}">删除</el-dropdown-item>
