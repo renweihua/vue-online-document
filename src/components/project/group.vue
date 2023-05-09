@@ -60,12 +60,14 @@
 						<span class="el-icon-s-unfold"></span>
 					</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item icon="el-icon-open" :command="{action:'sort',item:data}">默认打开子节点</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-turn-off" :command="{action:'sort',item:data}">默认关闭子节点</el-dropdown-item>
+						<el-dropdown-item v-if="data.default_expand == 0" icon="el-icon-open" :command="{action:'default_expand',item:data, node:node}">默认打开子节点</el-dropdown-item>
+						<el-dropdown-item v-else icon="el-icon-turn-off" :command="{action:'default_expand',item:data, node:node}">默认关闭子节点</el-dropdown-item>
+
 						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',item:data}">上移</el-dropdown-item>
 						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data}">下移</el-dropdown-item>
+
 						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data}">编辑</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'del',item:data}">删除</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'delete',item:data}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</span>
@@ -127,7 +129,9 @@
 		lists,
 		create,
 		update,
-		batchSave
+		batchSave,
+		deleteGroup,
+		setDefaultExpand
 	} from "@/api/group";
 
 	const CODE_OK = 200;
@@ -313,11 +317,32 @@
 				this.dialogFormVisible = false;
 			},
 			// `分组`的点击事件
-			handleCommand(command) {
-				if (command.action === "del") {
+			async handleCommand(command) {
+				console.log(command);
+				console.log(command.node);
+				if (command.action === "delete") {
 					this.delete(command.data.id);
 				} else if (command.action === "edit") {
 					this.showUpdateDiglog(command.item);
+				} else if (command.action === "sort") { // 排序
+
+				} else if (command.action === "default_expand") { // 子节点是否展示
+					command.item.default_expand = command.item.default_expand == 0 ? 1 : 0;
+					// 现有tree的子节点是否打开的标识
+					command.node.expanded = command.item.default_expand ? true : false;
+
+					const {
+						data,
+						http_status,
+						msg
+					} = await setDefaultExpand({
+						group_id: command.item.group_id,
+						default_expand: command.item.default_expand,
+					});
+
+					if (http_status === this.HTTP_SUCCESS) {
+						this.$message.success(msg);
+					}
 				}
 			},
 			showUpdateDiglog(item) {

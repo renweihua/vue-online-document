@@ -204,7 +204,6 @@
 					search
 				});
 				this.searchUserList = data;
-				console.log(this.searchUserList);
 			},
 		},
 	};

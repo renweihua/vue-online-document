@@ -42,7 +42,16 @@ export async function batchSave(data) {
     })
 }
 
-export async function deleteDoc(data) {
+// 是否默认打开子节点
+export async function setDefaultExpand(data) {
+    return await request({
+        url: `/group/set-default-expand`,
+        method: 'patch',
+        data
+    })
+}
+
+export async function deleteGroup(data) {
     return await request({
         url: `/group/delete`,
         method: 'delete',
