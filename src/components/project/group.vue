@@ -67,7 +67,7 @@
 						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data}">下移</el-dropdown-item>
 
 						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data, node:node}">编辑</el-dropdown-item>
-						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'delete',item:data}">删除</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'delete',item:data, node:node}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
 			</span>
@@ -228,28 +228,27 @@
 				return ids;
 			},
 			//删除分组
-			delete(id) {
-				if (!id) {
-					this.$message.error("id错误");
+			delete(item) {
+				if (!item) {
+					this.$message.error("无效的分组！");
 					return;
 				}
 
-				this.$confirm("该分组将被删除, 是否继续?", "提示", {
+				this.$confirm(
+				'确定要删除分组`' + item.group_name + '`?<br>\r\n\n <strong><span style="color: #f56c6c;">删除之后将无法恢复，请谨慎操作！</span></strong>'
+				, "提示", {
+						dangerouslyUseHTMLString: true,
 						confirmButtonText: "确定",
 						cancelButtonText: "取消",
 						type: "warning",
 					})
 					.then(() => {
-						this.$http
-							.post("/group/del", {
-								id: id,
+						deleteGroup({
+								group_id: item.group_id
 							})
-							.then((response) => {
-								response = response.data;
-								if (response.code === CODE_OK) {
-									this.$message.success("成功!");
-								} else {
-									this.$message.error("操作失败");
+							.then((res) => {
+								if (res.http_status === this.HTTP_SUCCESS) {
+									this.$message.success(res.msg);
 								}
 								this.getGroup(
 									this.$route.params.projectId
@@ -331,7 +330,7 @@
 				console.log(command);
 				console.log(command.node);
 				if (command.action === "delete") {
-					this.delete(command.data.id);
+					this.delete(command.item);
 				} else if (command.action === "edit") {
 					this.showUpdateDiglog(command.node);
 				} else if (command.action === "sort") { // 排序
