@@ -66,7 +66,7 @@
 						<el-dropdown-item icon="el-icon-top" :command="{action:'sort',item:data}">上移</el-dropdown-item>
 						<el-dropdown-item icon="el-icon-bottom" :command="{action:'sort',item:data}">下移</el-dropdown-item>
 
-						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data}">编辑</el-dropdown-item>
+						<el-dropdown-item icon="el-icon-edit-outline" :command="{action:'edit',item:data, node:node}">编辑</el-dropdown-item>
 						<el-dropdown-item icon="el-icon-delete-solid" :command="{action:'delete',item:data}">删除</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -159,6 +159,7 @@
 		},
 		data() {
 			return {
+				node: {},
 				// 分组弹出层的文本
 				groupDiaText: '新增分组',
 				// 分组列表
@@ -193,7 +194,7 @@
 		methods: {
 			// 选择父级分组
 			selectGroupHandleChange(item){
-				this.form.parent_id = item[item.length - 1];
+				this.form.parent_id = item[item.length - 1] || 0;
 			},
 			//获取分组列表
 			async getGroup(projectId) {
@@ -265,6 +266,7 @@
 			},
 			//更新数据
 			async updateGroup() {
+				let old_parent_id = this.form.parent_id;
 				if (this.form.group_name.length < 1) {
 					this.$message.error("分组名称不能为空");
 					return;
@@ -285,10 +287,18 @@
 					// 关闭弹出层
 					this.dialogFormVisible = false;
 
-					// 重新加载分组
-					this.getGroup(
-						this.$route.params.projectId
-					);
+					// 更改分组层级，则重新加载
+					// this.node.parent.data.group_id == 当前节点的父级Id
+					if(old_parent_id != this.node.parent.data.group_id){
+						// 重新加载分组
+						this.getGroup(
+							this.$route.params.projectId
+						);
+					}else{
+						// 更新对应tree节点的数据，无需重新加载
+						this.node.data.group_name = data.group_name;
+						this.node.data.default_expand = data.default_expand;
+					}
 				}
 			},
 			async createGroup() {
@@ -323,7 +333,7 @@
 				if (command.action === "delete") {
 					this.delete(command.data.id);
 				} else if (command.action === "edit") {
-					this.showUpdateDiglog(command.item);
+					this.showUpdateDiglog(command.node);
 				} else if (command.action === "sort") { // 排序
 
 				} else if (command.action === "default_expand") { // 子节点是否展示
@@ -345,12 +355,13 @@
 					}
 				}
 			},
-			showUpdateDiglog(item) {
+			showUpdateDiglog(node) {
 				this.groupDiaText = '编辑分组';
-				this.form = item;
+				this.form = node.data;
 				this.dialogFormVisible = true;
 				// 设置下拉框的分组数据
 				this.selectGroups = this.setGroupDisabledBySelf(this.groups);
+				this.node = node;
 			},
 			// 获取默认展示子节点的分组Ids
 			setGroupDisabledBySelf(groups){
