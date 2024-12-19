@@ -1,7 +1,7 @@
 <template>
 	<div class="top-bar">
 		<div class="top-bar-container">
-			<div class="top-bar-title">{{projectName ? projectName : '小丑路人·在线文档'}}</div>
+			<div class="top-bar-title" @click="$router.push('/')">{{projectName ? projectName : '小丑路人·在线文档'}}</div>
 			<a href="javascript:void(0);" @click="$router.push('/')" class="return-home" v-show="showHomeBtn">
 				<i class="el-icon-top-left"></i>
 				返回首页
